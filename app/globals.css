@@ -2,18 +2,21 @@
 @import "tw-animate-css";
 
 @theme {
-  --color-bg: #FFFFE2;
-  --color-brown-1: #F9B585;
-  --color-brown-2: #B17D58;
-  --color-navbar-bg: #F5DFBB;
+  --color-bg: #ffffe2;
+  --color-brown-1: #f9b585;
+  --color-brown-2: #b17d58;
+  --color-navbar-bg: #f5dfbb;
+  --color-yellow-btn: #FFFF91;
   --color-red: #B34646;
 
-  --color-chatbox-btn-1: #79B3FF;
-  --color-chatbox-btn-2: #FF91DA;
-  --color-chatbox-btn-3: #5AC89F;
-  --color-chatbox-btn-4: #D82202;
+  --color-chatbox-btn-1: #79b3ff;
+  --color-chatbox-btn-2: #ff91da;
+  --color-chatbox-btn-3: #5ac89f;
+  --color-chatbox-btn-4: #d82202;
   --color-chatbox-btn-5: #782400;
-  --color-chatbox-btn-6: #686CD4;
+  --color-chatbox-btn-6: #686cd4;
+
+  --color-modal-bg: #ffc8b1;
 }
 
 @custom-variant dark (&:is(.dark *));
