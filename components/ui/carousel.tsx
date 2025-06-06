@@ -231,6 +231,67 @@ function CarouselNext({
   )
 }
 
+
+function CarouselPreviousForFavoriteRecipes({
+  className,
+  variant = "noBorder",
+  size = "icon",
+  ...props
+}: React.ComponentProps<typeof Button>) {
+  const { orientation, scrollPrev, canScrollPrev } = useCarousel()
+
+  return (
+    <Button
+      data-slot="carousel-previous"
+      variant={"noBorder"}
+      size={size}
+      className={cn(
+        "size-8 rounded-full",
+        orientation === "horizontal"
+          ? "top-1/2 -left-10 -translate-y-1/2"
+          : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
+        className
+      )}
+      disabled={!canScrollPrev}
+      onClick={scrollPrev}
+      {...props}
+    >
+      <ChevronLeft className="min-w-6 min-h-6 text-red" />
+      <span className="sr-only">Previous slide</span>
+    </Button>
+  )
+}
+
+function CarouselNextForFavoriteRecipes({
+  className,
+  variant = "outline",
+  size = "icon",
+  ...props
+}: React.ComponentProps<typeof Button>) {
+  const { orientation, scrollNext, canScrollNext } = useCarousel()
+
+  return (
+    <Button
+      data-slot="carousel-next"
+      variant={"noBorder"}
+      size={size}
+      className={cn(
+        "size-8 rounded-full",
+        orientation === "horizontal"
+          ? "top-1/2 -right-10 -translate-y-1/2"
+          : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
+        className
+      )}
+      disabled={!canScrollNext}
+      onClick={scrollNext}
+      {...props}
+    >
+      <ChevronRight className="min-w-6 min-h-6 text-red" />
+      <span className="sr-only">Next slide</span>
+    </Button>
+  )
+}
+
 export {
   type CarouselApi,
   Carousel,
@@ -238,4 +299,6 @@ export {
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
+  CarouselPreviousForFavoriteRecipes,
+  CarouselNextForFavoriteRecipes,
 }

@@ -21,13 +21,41 @@ export default function ResponseRecipe() {
 
   const handleAddToFavorites = async () => {
     if (!user) {
+      alert("Vous devez être connecté pour ajouter des favoris");
       return;
     }
 
-    const { data, error } = await supabase.from("favorite_recipes").insert({
-      user_id: user.id,
-      recipe_id: recipeData.id,
-    });
+    try {
+      // Récupérer le token d'authentification
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      const response = await fetch("/api/add-to-favorite", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session?.access_token}`,
+        },
+        body: JSON.stringify({
+          recipe: {
+            content: recipeData,
+            title: title || "Recette sans titre",
+            description: description || "",
+            ingredients: ingredients || "",
+          },
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert("Recette ajoutée aux favoris avec succès !");
+      } else {
+        alert(result.error || "Erreur lors de l'ajout aux favoris");
+      }
+    } catch (error) {
+      console.error("Erreur:", error);
+      alert("Erreur lors de l'ajout aux favoris");
+    }
   }
 
   console.log(recipeData);
@@ -149,10 +177,10 @@ export default function ResponseRecipe() {
           </div>
         </div>
         <DialogFooter className="flex flex-row w-full justify-between">
-          <Button size={"lg"} className="bg-brown-2 rounded-2xl min-h-10" onClick={() => setDialogOpen(false)}>
+          <Button size={"lg"} className="bg-brown-2 rounded-2xl min-h-10 cursor-pointer" onClick={() => setDialogOpen(false)}>
             <RotateCcw className="min-w-6 min-h-6" /> Nouveau
           </Button>
-          <Button onClick={handleAddToFavorites} size={"lg"} className="bg-yellow-btn text-black rounded-2xl min-h-10">
+          <Button onClick={handleAddToFavorites} size={"lg"} className="bg-yellow-btn text-black rounded-2xl min-h-10 cursor-pointer">
             <Star className="min-w-6 min-h-6" /> Mettre en favoris
           </Button>
         </DialogFooter>

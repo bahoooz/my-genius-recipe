@@ -80,7 +80,7 @@ export default function SignInForm() {
         onClick={handleSubmit}
         disabled={isLoading}
         size={"lg"}
-        className="bg-brown-2 text-white font-medium"
+        className="bg-brown-2 text-white font-medium cursor-pointer"
       >
         <CircleArrowUp className="min-w-6 min-h-6" /> Connecte toi
       </Button>

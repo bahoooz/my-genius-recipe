@@ -146,3 +146,32 @@
 .font-fredoka {
   font-family: var(--font-fredoka);
 }
+
+/* Styles personnalisés pour la scrollbar */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-brown-2) var(--color-navbar-bg);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: var(--color-navbar-bg);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--color-brown-2);
+  border-radius: 10px;
+  border: 2px solid var(--color-navbar-bg);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brown-1);
+}
+
+.custom-scrollbar::-webkit-scrollbar-corner {
+  background: var(--color-navbar-bg);
+}

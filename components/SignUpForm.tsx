@@ -35,7 +35,7 @@ export default function SignUpForm() {
 
     try {
       const { data, error } = await signUp(email, password, username);
-      
+
       if (error) {
         throw error;
       }
@@ -43,7 +43,7 @@ export default function SignUpForm() {
       setSuccess(
         "Ton compte a été créé avec succès ! Tu peux désormais générer un max de recettes 🥣"
       );
-      
+
       // Redirection avec rechargement complet de la page après 3 secondes
       setTimeout(() => {
         window.location.href = "/auth?tab=signin";
@@ -72,22 +72,24 @@ export default function SignUpForm() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ 
-          name: "rouge-gorge"
+        body: JSON.stringify({
+          name: "rouge-gorge",
         }),
       });
-      
+
       const data = await response.json();
-      
+
       if (!response.ok) {
         throw new Error(data.error || "Une erreur est survenue");
       }
-      
+
       console.log(data);
       setSuccess("Test réussi !");
     } catch (error) {
       console.error("Erreur:", error);
-      setError(error instanceof Error ? error.message : "Une erreur est survenue");
+      setError(
+        error instanceof Error ? error.message : "Une erreur est survenue"
+      );
     } finally {
       setIsLoading(false);
     }
@@ -119,31 +121,33 @@ export default function SignUpForm() {
           type="email"
         />
       </div>
-      <div className="flex flex-col gap-2">
-        <Label className="text-brown-2 font-medium text-base">
-          Mot de passe
-        </Label>
-        <Input
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="border-2 border-brown-2 placeholder:text-gray-500"
-          placeholder="Écris ton mot de passe ici..."
-          required
-          type="password"
-        />
-      </div>
-      <div className="flex flex-col gap-2">
-        <Label className="text-brown-2 font-medium text-base">
-          Confirmer le mot de passe
-        </Label>
-        <Input
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          className="border-2 border-brown-2 placeholder:text-gray-500"
-          placeholder="Confirme ton mot de passe ici..."
-          required
-          type="password"
-        />
+      <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-4">
+        <div className="flex flex-col gap-2 w-full">
+          <Label className="text-brown-2 font-medium text-base">
+            Mot de passe
+          </Label>
+          <Input
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="border-2 border-brown-2 placeholder:text-gray-500"
+            placeholder="Écris ton mot de passe ici..."
+            required
+            type="password"
+          />
+        </div>
+        <div className="flex flex-col gap-2 w-full">
+          <Label className="text-brown-2 font-medium text-base">
+            Confirmer
+          </Label>
+          <Input
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            className="border-2 border-brown-2 placeholder:text-gray-500"
+            placeholder="Confirme ton mot de passe ici..."
+            required
+            type="password"
+          />
+        </div>
       </div>
       {error && (
         <p className="text-red text-sm font-medium text-center">{error}</p>
@@ -155,7 +159,7 @@ export default function SignUpForm() {
         onClick={handleSubmit}
         disabled={isLoading}
         size={"lg"}
-        className="bg-brown-2 text-white font-medium"
+        className="bg-brown-2 text-white font-medium cursor-pointer"
       >
         <BadgePlus className="min-w-6 min-h-6" /> Créer ton compte
       </Button>

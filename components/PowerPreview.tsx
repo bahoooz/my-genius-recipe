@@ -40,7 +40,7 @@ const powerPreviewImages = [
 
 export default function PowerPreview() {
   return (
-    <div className="px-4 py-8 mt-12 mb-32 border-[6px] border-[var(--color-brown-2)] rounded-2xl">
+    <div className="px-4 py-8 mt-12 mb-32 md:mb-0 border-[6px] md:border-none border-[var(--color-brown-2)] rounded-2xl">
       <div className="relative max-w-[220px] mx-auto h-[95px] mb-8">
         <h2 className="font-fredoka text-3xl font-medium text-[var(--color-brown-2)] leading-10">
           Un aperçu de la <br /> puissance de

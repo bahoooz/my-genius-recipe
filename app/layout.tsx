@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { fredoka, quicksand } from "./font";
-import Navbar from "@/components/Navbar";
+import MobileNavbar from "@/components/MobileNavbar";
+import DesktopNavbar from "@/components/DesktopNavbar";
 
 export const metadata: Metadata = {
   title: "My Genius Recipe",
@@ -22,7 +23,8 @@ export default function RootLayout({
         className={`${fredoka.variable} ${quicksand.variable} antialiased font-quicksand bg-[var(--bgColor)]`}
       >
         {children}
-        <Navbar />
+        <MobileNavbar className="block lg:hidden" />
+        <DesktopNavbar className="hidden lg:block" />
       </body>
     </html>
   );
