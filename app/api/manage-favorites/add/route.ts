@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
             title: recipe.title || "Recette sans titre",
             description: recipe.description || "",
             ingredients: recipe.ingredients || "",
-            instructions: recipe.content,
+            instructions: recipe.instructions,
         });
 
         if (error) {

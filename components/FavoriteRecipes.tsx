@@ -1,38 +1,47 @@
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { Button } from "./ui/button";
-import { ChevronLeft, ChevronRight, CookingPot, Star } from "lucide-react";
+import { CircleCheckBig, CookingPot, Star } from "lucide-react";
 import {
   Carousel,
   CarouselItem,
   CarouselContent,
-  CarouselPrevious,
-  CarouselNext,
   CarouselPreviousForFavoriteRecipes,
   CarouselNextForFavoriteRecipes,
 } from "./ui/carousel";
 import { Card, CardContent } from "./ui/card";
 import { supabase } from "@/lib/supabase";
+import RemoveFavoriteButton from "./RemoveFavoriteButton";
+import SeeDetailsRecipeButton from "./SeeDetailsRecipeButton";
 
 interface FavoriteRecipe {
   id: string;
   title: string;
-  recipe_image?: string;
-  recipe_id: string;
+  description: string;
+  instructions: string;
+  ingredients: string;
   created_at: string;
 }
 
 export default function FavoriteRecipes() {
   const [favorites, setFavorites] = useState<FavoriteRecipe[]>([]);
   const [loading, setLoading] = useState(true);
+  const [openDetailsId, setOpenDetailsId] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchFavorites() {
       try {
         console.log("🔍 Début de la récupération des favoris...");
-        
-        const { data: { user }, error: userError } = await supabase.auth.getUser();
-        console.log("👤 Utilisateur:", user ? user.id : "Non connecté", userError);
+
+        const {
+          data: { user },
+          error: userError,
+        } = await supabase.auth.getUser();
+        console.log(
+          "👤 Utilisateur:",
+          user ? user.id : "Non connecté",
+          userError
+        );
 
         if (!user) {
           console.log("❌ Utilisateur non authentifié");
@@ -50,13 +59,16 @@ export default function FavoriteRecipes() {
         console.log("📊 Résultats de la requête:", { data, error });
 
         if (error) {
-          console.error("❌ Erreur lors de la récupération des favoris:", error);
+          console.error(
+            "❌ Erreur lors de la récupération des favoris:",
+            error
+          );
         } else {
           console.log("✅ Favoris récupérés:", data);
-          setFavorites(data || []);
+          setFavorites(data);
         }
       } catch (error) {
-        console.error('💥 Erreur lors de la récupération des favoris:', error);
+        console.error("💥 Erreur lors de la récupération des favoris:", error);
       } finally {
         setLoading(false);
       }
@@ -69,6 +81,14 @@ export default function FavoriteRecipes() {
   useEffect(() => {
     console.log("🎯 État actuel des favorites:", favorites);
   }, [favorites]);
+
+  const toggleDetails = (recipeId: string) => {
+    setOpenDetailsId(prev => prev === recipeId ? null : recipeId);
+  };
+
+  const closeDetails = () => {
+    setOpenDetailsId(null);
+  };
 
   if (loading) {
     return (
@@ -88,37 +108,66 @@ export default function FavoriteRecipes() {
 
   return (
     <div>
-      <div className="flex justify-center gap-3 text-red mt-4 mb-8">
-        <ChevronLeft />
-        <ChevronRight />
-      </div>
-      <Carousel className="w-full max-w-xs">
+      <Carousel className="w-full md:max-w-[400px]">
+        <h2 className="font-fredoka text-2xl text-red font-medium mb-2 ml-1">
+          Recettes favorites
+        </h2>
         <CarouselContent>
-          {favorites.map((favorite) => (
-            <CarouselItem key={favorite.id}>
+          {favorites.map((favoriteRecipe) => (
+            <CarouselItem key={favoriteRecipe.id}>
               <div className="p-1">
-                <Card className="py-0">
-                  <CardContent className="bg-brown-1 rounded-2xl p-4 flex flex-col gap-4">
-                    <h2 className="font-fredoka text-2xl text-white font-medium">
-                      Recettes favorites
-                    </h2>
-                    <Image
-                      src={favorite.recipe_image || "/assets/img-power-preview/img-1.png"}
-                      alt={`image recette ${favorite.title}`}
-                      width={1536}
-                      height={1024}
-                      className="rounded-md"
-                    />
-                    <h3 className="text-white text-xl font-medium">{favorite.title}</h3>
-                    <div className="flex justify-between">
-                      <Button className="bg-red" size={"lg"}>
-                        <CookingPot className="min-w-6 min-h-6" /> Voir la
-                        recette
-                      </Button>
-                      <Button className="bg-yellow-btn text-black" size={"lg"}>
-                        <Star className="min-w-6 min-h-6" /> Retirer
-                      </Button>
+                <Card className="py-0 overflow-hidden shadow-none border-none">
+                  <CardContent className="bg-brown-1 p-4 flex flex-col gap-4">
+                    <h3 className="text-white text-xl font-medium">
+                      {favoriteRecipe.title}
+                    </h3>
+                    <div className="flex md:flex-col 2xl:flex-row gap-3 justify-between">
+                      <SeeDetailsRecipeButton
+                        onClick={() => toggleDetails(favoriteRecipe.id)}
+                        isOpen={openDetailsId === favoriteRecipe.id}
+                      />
+                      <RemoveFavoriteButton id={favoriteRecipe.id} />
                     </div>
+                    {openDetailsId === favoriteRecipe.id && (
+                      <div className="bg-red rounded-2xl w-full p-2 text-white">
+                        <div className="mb-2">
+                          <h4 className="text-sm font-bold mb-1">
+                            Description :
+                          </h4>
+                          <p className="text-xs">
+                            {favoriteRecipe.description}
+                          </p>
+                        </div>
+                        <div className="mb-2">
+                          <h4 className="text-sm font-bold mb-1">
+                            Ingrédients :
+                          </h4>
+                          <div className="text-xs">
+                            {favoriteRecipe.ingredients.split('- ').filter(ingredient => ingredient.trim()).map((ingredient, index) => (
+                              <div key={index}>
+                                - {ingredient.trim()}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-bold mb-1">
+                            Consignes de préparation :
+                          </h4>
+                          <div className="text-xs">
+                            {favoriteRecipe.instructions.split('\n').filter(instruction => instruction.trim()).map((instruction, index) => (
+                              <div key={index} className="mb-2">
+                                {instruction.trim()}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    <h3 className="text-red flex items-center gap-2 text-sm">
+                      <CircleCheckBig size={20} /> Recette générée avec le plan
+                      gratuit
+                    </h3>
                   </CardContent>
                 </Card>
               </div>
@@ -126,8 +175,12 @@ export default function FavoriteRecipes() {
           ))}
         </CarouselContent>
         <div className="flex justify-center gap-3 text-red mt-4 mb-8">
-          <CarouselPreviousForFavoriteRecipes />
-          <CarouselNextForFavoriteRecipes />
+          <div onClick={closeDetails}>
+            <CarouselPreviousForFavoriteRecipes />
+          </div>
+          <div onClick={closeDetails}>
+            <CarouselNextForFavoriteRecipes />
+          </div>
         </div>
       </Carousel>
     </div>

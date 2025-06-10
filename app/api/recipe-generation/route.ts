@@ -47,12 +47,13 @@ export async function POST(req: NextRequest) {
   (tu peux utiliser d'autres termes etc pour les ingrédients)
   /
 
-  **Couper les fraises en morceaux**
-  **Couper le chocolat en morceaux**
-  **Mélanger les fraises et le chocolat**
-  **Ajouter la vinaigrette**
-  **Mélanger le tout**
-  **Servir**
+  **1. Couper les fraises en morceaux**
+  **2. Couper le chocolat en morceaux**
+  **3. Mélanger les fraises et le chocolat**
+  **4. Ajouter la vinaigrette**
+  **5. Mélanger le tout**
+  **6. Servir**
+  (inclu un max de détails possible pour chaque étape de préparation)
   `;
 
   try {

@@ -17,6 +17,7 @@ import React from "react";
 import { useAuth } from "@/lib/useAuth";
 import BeforeDesktopVersion from "@/components/BeforeDesktopVersion";
 import FavoriteRecipes from "@/components/FavoriteRecipes";
+const { signOut } = await import("@/lib/supabase");
 
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -29,20 +30,25 @@ export default function ProfilePage() {
       <div className="px-4 pt-12 mb-32">
         <Title title="Profil" className="lg:ml-12 lg:text-center" />
         <div className="flex justify-center items-center gap-12 lg:gap-12 xl:gap-16 md:absolute md:left-1/2 md:-translate-x-1/2 md:top-1/2 md:-translate-y-1/2 md:min-w-[600px] lg:min-w-[800px] xl:min-w-[900px] lg:ml-12">
-          <div className="md:max-w-[400px] 2xl:max-w-[500px] md:border-none md:p-8 md:border-brown-2 md:overflow-y-scroll md:h-[70dvh] custom-scrollbar">
-            <div className="bg-brown-2 text-white flex justify-center items-center h-[150px] rounded-2xl mb-4">
+          <div className="max-w-full md:max-w-[400px] 2xl:max-w-[500px] md:border-none md:p-8 md:border-brown-2 md:overflow-y-scroll md:h-[70dvh] custom-scrollbar">
+            <div className=" bg-brown-2 text-white flex justify-center items-center h-[180px] rounded-2xl mb-4">
               <div className="text-lg flex flex-col gap-3">
-                <h3 className="flex gap-2">
+                <h3 className="flex gap-2 lg:gap-3">
                   <CircleUserRound
                     strokeWidth={1.5}
                     className="min-w-7 min-h-7"
                   />{" "}
                   {username}
                 </h3>
-                <h3 className="flex gap-2">
-                  <Mail strokeWidth={1.5} className="min-w-7 min-h-7" /> {email}
+                <h3 className="flex gap-2 lg:gap-3 items-center">
+                  <Mail strokeWidth={1.5} className="min-w-7 min-h-7" /> 
+                  <div className="flex flex-col">
+                    <span className="hidden md:block">{email.split('@')[0]}</span>
+                    <span className="hidden md:block">@{email.split('@')[1]}</span>
+                    <span className="block md:hidden">{email}</span>
+                  </div>
                 </h3>
-                <h3 className="flex gap-2">
+                <h3 className="flex gap-2 lg:gap-3">
                   <BadgeEuro strokeWidth={1.5} className="min-w-7 min-h-7" />{" "}
                   Compte {account_type}
                 </h3>
@@ -52,7 +58,6 @@ export default function ProfilePage() {
             <div className="flex flex-col gap-4">
               <Button
                 onClick={async () => {
-                  const { signOut } = await import("@/lib/supabase");
                   await signOut();
                   window.location.href = "/";
                 }}

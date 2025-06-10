@@ -29,7 +29,7 @@ export default function ResponseRecipe() {
       // Récupérer le token d'authentification
       const { data: { session } } = await supabase.auth.getSession();
       
-      const response = await fetch("/api/add-to-favorite", {
+      const response = await fetch("/api/manage-favorites/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -41,6 +41,7 @@ export default function ResponseRecipe() {
             title: title || "Recette sans titre",
             description: description || "",
             ingredients: ingredients || "",
+            instructions: instructions || "",
           },
         }),
       });
@@ -68,6 +69,7 @@ export default function ResponseRecipe() {
   const titleMatch = recipeData.match(/\*(.*?)\*/);
   const descriptionMatch = recipeData.match(/#(.*?)#/);
   const ingredientsMatch = recipeData.match(/\/(.*?)\//s);
+  const instructionsMatch = recipeData.match(/\*\*(.*?)\*\*/g);
 
   // Extraction des étapes une par une
   const stepsRecipe = [];
@@ -80,11 +82,12 @@ export default function ResponseRecipe() {
   const title = titleMatch ? titleMatch[1] : "";
   const description = descriptionMatch ? descriptionMatch[1] : "";
   const ingredients = ingredientsMatch ? ingredientsMatch[1] : "";
+  const instructions = instructionsMatch ? instructionsMatch.map((match: string) => match.replace(/\*\*/g, '')).join('\n') : "";
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
       <DialogContent className="sm:max-w-[425px] max-h-[600px] p-0 bg-transparent shadow-none">
-        <div className="bg-modal-bg p-4 rounded-3xl shadow-lg  max-h-[600px] ">
+        <div className="bg-modal-bg p-4 rounded-3xl shadow-lg max-h-[600px]">
           <DialogHeader className="bg-white p-2 px-8 rounded-xl relative mb-4">
             <DialogTitle className="text-base flex items-center gap-2">
               {isOpenStepsRecipe ? (
