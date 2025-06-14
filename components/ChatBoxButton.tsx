@@ -23,8 +23,8 @@ export default function ChatBoxButton({
   return (
     <Button
       disabled={isDisabled}
-      className={`bg-white border-[2px] font-semibold gap-2 cursor-pointer text-xs !px-2 flex-1 relative h-10 hover:bg-white transition-all duration-300 ${
-        isSelected ? "border-current text-current" : "text-black border-black"
+      className={`bg-white border-[2px] font-semibold gap-2 cursor-pointer text-xs !px-2 flex-1 relative h-10 hover:bg-white transition-all duration-300 hover:scale-105 ${
+        isSelected ? "border-current text-current border-[3px]" : "text-black border-black"
       }`}
       style={isSelected ? { borderColor: color, color: color } : undefined}
       onClick={onClick}

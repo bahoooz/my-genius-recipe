@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
 
   "Description de la recette qui doit être assez détaillée mais assez courte (40 mots max), qui précise les filtres de la recette, par exemple si c'est une recette froide, ou chaude, sucrée ou salée et qui doit être encadrée par des #"
 
-  "Liste des ingrédients nécessaires pour faire la recette, et n'hésite pas à ajouter du détail sur les ingrédients, comme la quantité, la taille, la forme, etc. encadré par des /"
+  "Liste des ingrédients nécessaires pour faire la recette, et n'hésite pas à ajouter du détail sur les ingrédients, comme la quantité, la taille, la forme, etc. encadré par des $"
 
   "Puis les étapes de préparation de la recette, tu dois apporter le plus de détails possible pour chaque étape, l'utilisateur doit pouvoir suivre la recette sans difficultés uniquement avec tes indications, la recette doit être encadrée par des **"
 
@@ -38,14 +38,14 @@ export async function POST(req: NextRequest) {
 
   #Une salade sucrée-salée parfaite pour les journées chaudes, avec des fraises juteuses, du chocolat fondant et une touche de vinaigrette légère pour un plaisir frais et original.#
 
-  /
+  $
   - une dizaine de fraises
   - 100g de chocolat
   - 100g de salade
   - 100g de vinaigrette
   - 3 cuillères à soupe de sucre
   (tu peux utiliser d'autres termes etc pour les ingrédients)
-  /
+  $
 
   **1. Couper les fraises en morceaux**
   **2. Couper le chocolat en morceaux**

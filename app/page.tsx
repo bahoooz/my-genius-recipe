@@ -9,7 +9,7 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="px-4 pt-12 md:pt-0 md:flex md:items-center md:justify-center md:min-h-screen">
+    <div className="px-4 pt-12 md:pt-0 md:flex md:items-center md:justify-center md:min-h-screen relative">
       <div className="md:flex md:justify-center md:items-center md:gap-12 lg:gap-8 xl:gap-16 lg:h-[70dvh] lg:ml-12">
         <div className="md:max-w-[400px] 2xl:max-w-[500px] md:border-none md:p-8 md:border-brown-2 md:overflow-y-scroll md:h-[70dvh] custom-scrollbar">
           <div className="relative max-w-[300px] h-[115px] mx-auto mb-8">

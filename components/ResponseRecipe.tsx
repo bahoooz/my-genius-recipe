@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   DialogHeader,
   DialogContent,
@@ -10,14 +10,21 @@ import {
 import { Dialog } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { useRecipeStore } from "@/store/recipeStore";
-import { ArrowLeft, Carrot, ChefHat, RotateCcw, Star } from "lucide-react";
+import { ArrowLeft, Carrot, ChefHat, RotateCcw, Star, Eye, Crown } from "lucide-react";
 import { useAuth } from "@/lib/useAuth";
 import { supabase } from "@/lib/supabase";
+import { getUserSubscription } from "@/lib/utils";
 
 export default function ResponseRecipe() {
   const { isDialogOpen, setDialogOpen, recipeData } = useRecipeStore();
   const [isOpenStepsRecipe, setIsOpenStepsRecipe] = useState(false);
+  const { setIsOpenImageRecipe, setImageRecipe } = useRecipeStore();
+  const [subscription, setSubscription] = useState<string | null>(null);
   const { user } = useAuth();
+
+  useEffect(() => {
+    getUserSubscription({user, setSubscription})
+  }, [user?.id]);
 
   const handleAddToFavorites = async () => {
     if (!user) {
@@ -27,13 +34,15 @@ export default function ResponseRecipe() {
 
     try {
       // Récupérer le token d'authentification
-      const { data: { session } } = await supabase.auth.getSession();
-      
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
       const response = await fetch("/api/manage-favorites/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${session?.access_token}`,
+          Authorization: `Bearer ${session?.access_token}`,
         },
         body: JSON.stringify({
           recipe: {
@@ -58,7 +67,7 @@ export default function ResponseRecipe() {
       console.error("Erreur:", error);
       alert("Erreur lors de l'ajout aux favoris");
     }
-  }
+  };
 
   console.log(recipeData);
   console.log("URL de l'image:", recipeData?.imageUrl);
@@ -70,7 +79,7 @@ export default function ResponseRecipe() {
   // Extraction des données avec regex
   const titleMatch = recipeData.recipe.match(/\*(.*?)\*/);
   const descriptionMatch = recipeData.recipe.match(/#(.*?)#/);
-  const ingredientsMatch = recipeData.recipe.match(/\/(.*?)\//s);
+  const ingredientsMatch = recipeData.recipe.match(/\$(.*?)\$/s);
   const instructionsMatch = recipeData.recipe.match(/\*\*(.*?)\*\*/g);
 
   // Extraction des étapes une par une
@@ -84,15 +93,16 @@ export default function ResponseRecipe() {
   const title = titleMatch ? titleMatch[1] : "";
   const description = descriptionMatch ? descriptionMatch[1] : "";
   const ingredients = ingredientsMatch ? ingredientsMatch[1] : "";
-  const instructions = instructionsMatch ? instructionsMatch.map((match: string) => match.replace(/\*\*/g, '')).join('\n') : "";
-  console.log(instructions);
-  
-  const image = recipeData?.imageUrl;
+  const instructions = instructionsMatch
+    ? instructionsMatch
+        .map((match: string) => match.replace(/\*\*/g, ""))
+        .join("\n")
+    : "";
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
-      <DialogContent className="sm:max-w-[425px] max-h-[600px] p-0 bg-transparent shadow-none">
-        <div className="bg-modal-bg p-4 rounded-3xl shadow-lg max-h-[600px]">
+      <DialogContent className="sm:max-w-[425px] max-h-fit p-0 bg-transparent shadow-none">
+        <div className="bg-modal-bg p-4 rounded-3xl shadow-lg max-h-fit">
           <DialogHeader className="bg-white p-2 px-8 rounded-xl relative mb-4">
             <DialogTitle className="text-base flex items-center gap-2">
               {isOpenStepsRecipe ? (
@@ -174,21 +184,40 @@ export default function ResponseRecipe() {
                 </Button>
               </div>
             ) : (
-              <Button
-                size={"lg"}
-                onClick={() => setIsOpenStepsRecipe(!isOpenStepsRecipe)}
-                className="bg-white text-[#F4895B] border-2 border-[#F4895B] w-full"
-              >
-                <ChefHat /> Comment je prépare ça ?
-              </Button>
+              <div className="flex flex-col gap-4">
+                <Button
+                  size={"lg"}
+                  onClick={() => {
+                    setIsOpenStepsRecipe(true);
+                  }}
+                  className="bg-white text-[#F4895B] border-2 border-[#F4895B] w-full"
+                >
+                  <ChefHat className="min-w-5 min-h-5" /> Comment je prépare ça ?
+                </Button>
+                
+                <Button disabled={subscription === "free"} size={"lg"} className="relative bg-white text-red border-2 border-red w-full" onClick={() => {
+                  setIsOpenImageRecipe(true);
+                  setImageRecipe(recipeData?.imageUrl);
+                }}>
+                  {subscription === "free" && <Crown className="absolute top-1/2 left-2 -translate-y-1/2 min-w-[24px] min-h-[24px] text-yellow-500" />} <Eye className="min-w-5 min-h-5" /> À quoi ça pourrait ressembler ?
+                </Button>
+              </div>
             )}
           </div>
         </div>
         <DialogFooter className="flex flex-row w-full justify-between">
-          <Button size={"lg"} className="bg-brown-2 rounded-2xl min-h-10 cursor-pointer" onClick={() => setDialogOpen(false)}>
+          <Button
+            size={"lg"}
+            className="bg-brown-2 rounded-2xl min-h-10 cursor-pointer"
+            onClick={() => setDialogOpen(false)}
+          >
             <RotateCcw className="min-w-6 min-h-6" /> Nouveau
           </Button>
-          <Button onClick={handleAddToFavorites} size={"lg"} className="bg-yellow-btn text-black rounded-2xl min-h-10 cursor-pointer">
+          <Button
+            onClick={handleAddToFavorites}
+            size={"lg"}
+            className="bg-yellow-btn text-black rounded-2xl min-h-10 cursor-pointer"
+          >
             <Star className="min-w-6 min-h-6" /> Mettre en favoris
           </Button>
         </DialogFooter>

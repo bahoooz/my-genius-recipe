@@ -1,7 +1,5 @@
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
-import { Button } from "./ui/button";
-import { CircleCheckBig, CookingPot, Star } from "lucide-react";
 import {
   Carousel,
   CarouselItem,
@@ -124,13 +122,15 @@ export default function FavoriteRecipes() {
                     <h3 className="text-white text-xl font-medium">
                       {favoriteRecipe.title}
                     </h3>
-                    <Image
-                      className="mx-auto rounded-2xl w-full max-w-[350px] lg:h-[150px] lg:hover:h-[286px] lg:cursor-pointer transition-all duration-500 object-cover"
-                      src={favoriteRecipe.image}
-                      alt={favoriteRecipe.title}
-                      width={512}
-                      height={512}
-                    />
+                    {favoriteRecipe.image && (
+                      <Image
+                        className="mx-auto rounded-2xl w-full max-w-[350px] lg:h-[150px] lg:hover:h-[286px] lg:cursor-pointer transition-all duration-500 object-cover"
+                        src={favoriteRecipe.image}
+                        alt={favoriteRecipe.title}
+                        width={512}
+                        height={512}
+                      />
+                    )}
                     <div className="flex md:flex-col 2xl:flex-row gap-3 justify-between">
                       <SeeDetailsRecipeButton
                         onClick={() => toggleDetails(favoriteRecipe.id)}
@@ -181,21 +181,21 @@ export default function FavoriteRecipes() {
                   </CardContent>
                 </Card>
               </div>
+              {favorites.length > 1 && (
+                <div className="mb-8 mt-4">
+                  <div className="flex justify-center items-center gap-3 text-red">
+                    <div onClick={closeDetails}>
+                      <CarouselPreviousForFavoriteRecipes />
+                    </div>
+                    <div onClick={closeDetails}>
+                      <CarouselNextForFavoriteRecipes />
+                    </div>
+                  </div>
+                </div>
+              )}
             </CarouselItem>
           ))}
         </CarouselContent>
-        <div className="mb-8 mt-4">
-          {favorites.length > 1 && (
-            <div className="flex justify-center items-center gap-3 text-red">
-              <div onClick={closeDetails}>
-                <CarouselPreviousForFavoriteRecipes />
-              </div>
-              <div onClick={closeDetails}>
-                <CarouselNextForFavoriteRecipes />
-              </div>
-            </div>
-          )}
-        </div>
       </Carousel>
     </div>
   );
