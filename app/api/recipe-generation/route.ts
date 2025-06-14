@@ -64,7 +64,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    // Génération de la recette
+    const recipeResponse = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -83,10 +84,31 @@ export async function POST(req: NextRequest) {
       }),
     });
 
-    const data = await response.json();
-    const recipe = data.choices[0].message.content;
+    const recipeData = await recipeResponse.json();
+    const recipe = recipeData.choices[0].message.content;
 
-    return NextResponse.json(recipe, { status: 200 });
+    // Génération de l'image si demandée
+    let imageUrl = null;
+    if (image) {
+      const imageResponse = await fetch("https://api.openai.com/v1/images/generations", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.OPEN_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: "dall-e-2",
+          prompt: `Une belle photo de ${recipe.split('*')[1]}, style photographie culinaire professionnelle, éclairage parfait, composition élégante`,
+          n: 1,
+          size: "512x512",
+        }),
+      });
+
+      const imageData = await imageResponse.json();
+      imageUrl = imageData.data[0].url;
+    }
+
+    return NextResponse.json({ recipe, imageUrl }, { status: 200 });
 
   } catch (error) {
     return NextResponse.json(

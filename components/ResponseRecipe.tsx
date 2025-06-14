@@ -42,6 +42,7 @@ export default function ResponseRecipe() {
             description: description || "",
             ingredients: ingredients || "",
             instructions: instructions || "",
+            image: recipeData?.imageUrl || "",
           },
         }),
       });
@@ -60,22 +61,23 @@ export default function ResponseRecipe() {
   }
 
   console.log(recipeData);
+  console.log("URL de l'image:", recipeData?.imageUrl);
 
   if (!recipeData) {
     return null;
   }
 
   // Extraction des données avec regex
-  const titleMatch = recipeData.match(/\*(.*?)\*/);
-  const descriptionMatch = recipeData.match(/#(.*?)#/);
-  const ingredientsMatch = recipeData.match(/\/(.*?)\//s);
-  const instructionsMatch = recipeData.match(/\*\*(.*?)\*\*/g);
+  const titleMatch = recipeData.recipe.match(/\*(.*?)\*/);
+  const descriptionMatch = recipeData.recipe.match(/#(.*?)#/);
+  const ingredientsMatch = recipeData.recipe.match(/\/(.*?)\//s);
+  const instructionsMatch = recipeData.recipe.match(/\*\*(.*?)\*\*/g);
 
   // Extraction des étapes une par une
   const stepsRecipe = [];
   let stepMatch;
   const stepRegex = /\*\*(.*?)\*\*/g;
-  while ((stepMatch = stepRegex.exec(recipeData)) !== null) {
+  while ((stepMatch = stepRegex.exec(recipeData.recipe)) !== null) {
     stepsRecipe.push(stepMatch[1].trim());
   }
 
@@ -83,6 +85,9 @@ export default function ResponseRecipe() {
   const description = descriptionMatch ? descriptionMatch[1] : "";
   const ingredients = ingredientsMatch ? ingredientsMatch[1] : "";
   const instructions = instructionsMatch ? instructionsMatch.map((match: string) => match.replace(/\*\*/g, '')).join('\n') : "";
+  console.log(instructions);
+  
+  const image = recipeData?.imageUrl;
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>

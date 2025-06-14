@@ -8,6 +8,7 @@ interface ChatBoxButtonProps {
   other?: React.ReactNode;
   isSelected?: boolean;
   onClick?: () => void;
+  isDisabled?: boolean;
 }
 
 export default function ChatBoxButton({
@@ -16,10 +17,12 @@ export default function ChatBoxButton({
   color,
   other,
   isSelected,
+  isDisabled,
   onClick,
 }: ChatBoxButtonProps) {
   return (
     <Button
+      disabled={isDisabled}
       className={`bg-white border-[2px] font-semibold gap-2 cursor-pointer text-xs !px-2 flex-1 relative h-10 hover:bg-white transition-all duration-300 ${
         isSelected ? "border-current text-current" : "text-black border-black"
       }`}

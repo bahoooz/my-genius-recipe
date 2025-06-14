@@ -21,6 +21,7 @@ interface FavoriteRecipe {
   instructions: string;
   ingredients: string;
   created_at: string;
+  image: string;
 }
 
 export default function FavoriteRecipes() {
@@ -83,7 +84,7 @@ export default function FavoriteRecipes() {
   }, [favorites]);
 
   const toggleDetails = (recipeId: string) => {
-    setOpenDetailsId(prev => prev === recipeId ? null : recipeId);
+    setOpenDetailsId((prev) => (prev === recipeId ? null : recipeId));
   };
 
   const closeDetails = () => {
@@ -100,8 +101,10 @@ export default function FavoriteRecipes() {
 
   if (favorites.length === 0) {
     return (
-      <div className="flex justify-center items-center h-48">
-        <p className="text-white">Aucune recette favorite trouvée</p>
+      <div className="flex justify-center items-center h-48 bg-red max-w-[300px] px-4 rounded-2xl mb-4">
+        <p className="text-white text-center">
+          Vous n'avez pas de recette favorite pour le moment 🥯
+        </p>
       </div>
     );
   }
@@ -121,6 +124,13 @@ export default function FavoriteRecipes() {
                     <h3 className="text-white text-xl font-medium">
                       {favoriteRecipe.title}
                     </h3>
+                    <Image
+                      className="mx-auto rounded-2xl w-full max-w-[350px] lg:h-[150px] lg:hover:h-[286px] lg:cursor-pointer transition-all duration-500 object-cover"
+                      src={favoriteRecipe.image}
+                      alt={favoriteRecipe.title}
+                      width={512}
+                      height={512}
+                    />
                     <div className="flex md:flex-col 2xl:flex-row gap-3 justify-between">
                       <SeeDetailsRecipeButton
                         onClick={() => toggleDetails(favoriteRecipe.id)}
@@ -143,11 +153,12 @@ export default function FavoriteRecipes() {
                             Ingrédients :
                           </h4>
                           <div className="text-xs">
-                            {favoriteRecipe.ingredients.split('- ').filter(ingredient => ingredient.trim()).map((ingredient, index) => (
-                              <div key={index}>
-                                - {ingredient.trim()}
-                              </div>
-                            ))}
+                            {favoriteRecipe.ingredients
+                              .split("- ")
+                              .filter((ingredient) => ingredient.trim())
+                              .map((ingredient, index) => (
+                                <div key={index}>- {ingredient.trim()}</div>
+                              ))}
                           </div>
                         </div>
                         <div>
@@ -155,32 +166,35 @@ export default function FavoriteRecipes() {
                             Consignes de préparation :
                           </h4>
                           <div className="text-xs">
-                            {favoriteRecipe.instructions.split('\n').filter(instruction => instruction.trim()).map((instruction, index) => (
-                              <div key={index} className="mb-2">
-                                {instruction.trim()}
-                              </div>
-                            ))}
+                            {favoriteRecipe.instructions
+                              .split("\n")
+                              .filter((instruction) => instruction.trim())
+                              .map((instruction, index) => (
+                                <div key={index} className="mb-2">
+                                  {instruction.trim()}
+                                </div>
+                              ))}
                           </div>
                         </div>
                       </div>
                     )}
-                    <h3 className="text-red flex items-center gap-2 text-sm">
-                      <CircleCheckBig size={20} /> Recette générée avec le plan
-                      gratuit
-                    </h3>
                   </CardContent>
                 </Card>
               </div>
             </CarouselItem>
           ))}
         </CarouselContent>
-        <div className="flex justify-center gap-3 text-red mt-4 mb-8">
-          <div onClick={closeDetails}>
-            <CarouselPreviousForFavoriteRecipes />
-          </div>
-          <div onClick={closeDetails}>
-            <CarouselNextForFavoriteRecipes />
-          </div>
+        <div className="mb-8 mt-4">
+          {favorites.length > 1 && (
+            <div className="flex justify-center items-center gap-3 text-red">
+              <div onClick={closeDetails}>
+                <CarouselPreviousForFavoriteRecipes />
+              </div>
+              <div onClick={closeDetails}>
+                <CarouselNextForFavoriteRecipes />
+              </div>
+            </div>
+          )}
         </div>
       </Carousel>
     </div>

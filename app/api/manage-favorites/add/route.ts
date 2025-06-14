@@ -30,6 +30,7 @@ export async function POST(req: NextRequest) {
             description: recipe.description || "",
             ingredients: recipe.ingredients || "",
             instructions: recipe.instructions,
+            image: recipe.image,
         });
 
         if (error) {

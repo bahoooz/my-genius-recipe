@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Textarea } from "./ui/textarea";
 import ChatBoxButton from "./ChatBoxButton";
 import {
@@ -11,9 +11,14 @@ import {
   Drumstick,
   FileStack,
   CookingPot,
+  Crown,
+  Loader2,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { useRecipeStore } from "@/store/recipeStore";
+import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/lib/useAuth";
+import NextImage from "next/image";
 
 export default function ChatBox() {
   const setRecipeData = useRecipeStore((state) => state.setRecipeData);
@@ -25,6 +30,9 @@ export default function ChatBox() {
   const [saltyRecipe, setSaltyRecipe] = useState(false);
   const [image, setImage] = useState(false);
   const [numberOfVersions, setNumberOfVersions] = useState(1);
+  const [userData, setUserData] = useState<any>(null);
+  const { user } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
 
   const filters = {
     cold_recipe: coldRecipe,
@@ -37,6 +45,7 @@ export default function ChatBox() {
 
   const handleGenerated = async () => {
     try {
+      setIsLoading(true);
       const recipe = await fetch("/api/recipe-generation", {
         method: "POST",
         body: JSON.stringify({
@@ -47,10 +56,28 @@ export default function ChatBox() {
       const data = await recipe.json();
       setRecipeData(data);
       setDialogOpen(true);
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    async function getUserSubscription() {
+      if (user?.id) {
+        const { data, error } = await supabase
+          .from("user_profiles")
+          .select("*")
+          .eq("user_id", user?.id)
+          .single();
+        if (!error) {
+          setUserData(data);
+        }
+      }
+    }
+    getUserSubscription();
+  }, [user?.id]);
 
   return (
     <div className="mt-8">
@@ -96,13 +123,28 @@ export default function ChatBox() {
           </div>
           <div className="flex justify-between gap-3">
             <ChatBoxButton
-              icon={<Image className="min-w-6 min-h-6" />}
+              icon={
+                <div>
+                  {userData?.subscription === "free" && (
+                    <Crown className="absolute top-1/2 left-2 -translate-y-1/2 min-w-[24px] min-h-[24px] text-yellow-500" />
+                  )}{" "}
+                  <Image className="min-w-6 min-h-6" />
+                </div>
+              }
               color="#5AC89F"
               onClick={() => setImage(!image)}
               isSelected={image}
+              isDisabled={userData?.subscription === "free"}
             />
             <ChatBoxButton
-              icon={<FileStack className="min-w-6 min-h-6" />}
+              icon={
+                <div>
+                  {userData?.subscription === "free" && (
+                    <Crown className="absolute top-1/2 left-2 -translate-y-1/2 min-w-[24px] min-h-[24px] text-yellow-500" />
+                  )}
+                  <FileStack className="min-w-6 min-h-6" />
+                </div>
+              }
               color="#686CD4"
               other={
                 <span className="absolute -translate-x-1/2 -translate-y-1/2 top-[70%] left-[60%] text-sm font-bold">
@@ -116,6 +158,7 @@ export default function ChatBox() {
                 }
               }}
               isSelected={true}
+              isDisabled={userData?.subscription === "free"}
             />
           </div>
         </div>
@@ -124,8 +167,15 @@ export default function ChatBox() {
         <Button
           onClick={handleGenerated}
           className="bg-[var(--color-brown-2)] rounded-xl mt-4 ml-auto"
+          disabled={isLoading}
         >
-          <CookingPot size={20} /> Générer
+          {isLoading ? (
+            <Loader2 className="animate-spin" />
+          ) : (
+            <div className="flex items-center gap-2">
+              <CookingPot size={20} /> Générer
+            </div>
+          )}
         </Button>
       </div>
     </div>

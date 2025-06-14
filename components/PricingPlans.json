@@ -1,0 +1,114 @@
+[
+    {
+        "id": 1,
+        "plan": "Free",
+        "description": "Le plan de base inclut un accès limité à MGR mais avec tout de même de bonnes performances dans la génération de recettes",
+        "advantages": [
+            {
+                "isAdvantage": false,
+                "text": "Génération de recettes avec image"
+            },
+            {
+                "isAdvantage": true,
+                "text": "Possibilité d’avoir jusqu’à 2 recettes générées en même temps"
+            },
+            {
+                "isAdvantage": true,
+                "text": "Limite de 10 recettes générées par mois"
+            },
+            {
+                "isAdvantage": false,
+                "text": "IA plus puissante et précise pour la génération de recettes"
+            },
+            {
+                "isAdvantage": false,
+                "text": "IA plus créative pour les recettes complexes"
+            },
+            {
+                "isAdvantage": false,
+                "text": "Consignes de préparations de recettes plus complètes"
+            },
+            {
+                "isAdvantage": true,
+                "text": "Limite de 25 recettes en favoris"
+            }
+        ],
+        "priceForMonth":  0,
+        "priceForYear": 0,
+        "priceForMonthId": "",
+        "priceForYearId": "",
+        "linkForPriceMonth": "",
+        "linkForPriceYear": "",
+        "isFree": true
+    },
+    {
+        "id": 2,
+        "plan": "Premium",
+        "description": "L’abonnement Premium vous offre une expérience totalement exclusive avec MGR, vous offrant une totale liberté sur notre IA !",
+        "advantages": [
+            {
+                "isAdvantage": true,
+                "text": "Génération de recettes avec image"
+            },
+            {
+                "isAdvantage": true,
+                "text": "Possibilité d’avoir jusqu’à 5 recettes générées en même temps"
+            },
+            {
+                "isAdvantage": true,
+                "text": "Limite de 100 recettes générées par mois"
+            },
+            {
+                "isAdvantage": true,
+                "text": "IA plus puissante et précise pour la génération de recettes"
+            },
+            {
+                "isAdvantage": true,
+                "text": "IA plus créative pour les recettes complexes"
+            },
+            {
+                "isAdvantage": true,
+                "text": "Consignes de préparations de recettes plus complètes"
+            },
+            {
+                "isAdvantage": true,
+                "text": "Aucune limite max de recettes en favoris"
+            }
+        ],
+        "priceForMonth":  5.99,
+        "priceForYear": 65.99,
+        "priceForMonthId": "price_1RZDUKDVNTY8xoRACeuUsEi0",
+        "priceForYearId": "price_1RZDXADVNTY8xoRAfnqRzDRc",
+        "linkForPriceMonth": "https://buy.stripe.com/test_4gM4gz28bgbDbbA0G1bfO00",
+        "linkForPriceYear": "https://buy.stripe.com/00weVdg8Q2vg4IJg5K9IQ01",
+        "isFree": false,
+        "image": "/assets/mascot_premium.png"
+    },
+    {
+        "id": 3,
+        "plan": "Infinite",
+        "description": "L’abonnement de base inclut un accès limité à MGR mais avec tout de même de bonnes performances dans la génération de recettes",
+        "advantages": [
+            {
+                "isAdvantage": true,
+                "text": "Toutes les fonctionnalités de MGR Premium"
+            },
+            {
+                "isAdvantage": true,
+                "text": "Aucune limite de recettes générées par mois"
+            },
+            {
+                "isAdvantage": true,
+                "text": "Les nouveautés avant tout le monde"
+            }
+        ],
+        "priceForMonth":  14.99,
+        "priceForYear": 169.99,
+        "priceForMonthId": "price_1RZE6HDVNTY8xoRAhOgC2Jh6",
+        "priceForYearId": "price_1RZE6dDVNTY8xoRAIRTyLsy3",
+        "linkForPriceMonth": "https://buy.stripe.com/28EeVd9Ks0n8grr3iY9IQ02",
+        "linkForPriceYear": "https://buy.stripe.com/4gM00j6ygedYfnn9Hm9IQ03",
+        "isFree": false,
+        "image": "/assets/mascot_infinite_nobg.png"
+    }
+]
