@@ -24,7 +24,7 @@ export default function ResponseRecipe() {
 
   useEffect(() => {
     getUserSubscription({user, setSubscription})
-  }, [user?.id]);
+  }, [user]);
 
   const handleAddToFavorites = async () => {
     if (!user) {

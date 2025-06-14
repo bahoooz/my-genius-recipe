@@ -20,7 +20,7 @@ export default function SignInForm() {
     setError("");
 
     try {
-      const { data, error } = await signIn(email, password);
+      const { error } = await signIn(email, password);
       
       if (error) {
         throw error;
@@ -32,10 +32,10 @@ export default function SignInForm() {
       setTimeout(() => {
         window.location.href = "/";
       }, 1500);
-    } catch (err: any) {
-      console.error("Erreur de connexion:", err);
-      if (err.message) {
-        setError(err.message);
+    } catch (error: any) {
+      console.error("Erreur de connexion:", error);
+      if (error.message) {
+        setError(error.message);
       } else {
         setError("Email ou mot de passe incorrect");
       }

@@ -1,4 +1,3 @@
-import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import Stripe from 'stripe';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
@@ -26,10 +25,10 @@ export async function POST(req: Request) {
   try {
     // Construction de l'événement Stripe à partir du corps, de la signature et de la clé secrète
     event = stripe.webhooks.constructEvent(body, signature, webhookSecret ?? "");
-  } catch (err: any) {
+  } catch (error: any) {
     // Gestion des erreurs liées à la vérification de la signature
-    console.error(`Échec de la vérification de la signature du webhook. ${err.message}`);
-    return new Response(JSON.stringify({ error: err.message }), { status: 400 });
+    console.error(`Échec de la vérification de la signature du webhook. ${error.message}`);
+    return new Response(JSON.stringify({ error: error.message }), { status: 400 });
   }
 
   // Extraction des données et du type d'événement

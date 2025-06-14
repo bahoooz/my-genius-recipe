@@ -6,8 +6,9 @@ import SignUpForm from "@/components/SignUpForm";
 import Title from "@/components/Title";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function Auth() {
+function AuthContent() {
   const searchParams = useSearchParams();
   const tabParam = searchParams.get("tab");
   const defaultTab = tabParam === "signin" ? "signin" : "signup";
@@ -49,5 +50,13 @@ export default function Auth() {
         <BeforeDesktopVersion />
       </div>
     </div>
+  );
+}
+
+export default function Auth() {
+  return (
+    <Suspense fallback={<div>Chargement...</div>}>
+      <AuthContent />
+    </Suspense>
   );
 }

@@ -112,7 +112,7 @@ export async function POST(req: NextRequest) {
 
   } catch (error) {
     return NextResponse.json(
-      { error: "Une erreur est survenue lors de la génération de la recette" },
+      { error: "Une erreur est survenue lors de la génération de la recette " + error },
       { status: 500 }
     );
   }

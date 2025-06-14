@@ -34,7 +34,7 @@ export default function SignUpForm() {
     }
 
     try {
-      const { data, error } = await signUp(email, password, username);
+      const { error } = await signUp(email, password, username);
 
       if (error) {
         throw error;
@@ -48,48 +48,13 @@ export default function SignUpForm() {
       setTimeout(() => {
         window.location.href = "/auth?tab=signin";
       }, 3000);
-    } catch (err: any) {
-      console.error("Erreur d'inscription:", err);
-      if (err.message) {
-        setError(err.message);
+    } catch (error: any) {
+      console.error("Erreur d'inscription:", error);
+      if (error.message) {
+        setError(error.message);
       } else {
         setError("Une erreur est survenue lors de la création du compte");
       }
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleTest = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError("");
-    setSuccess("");
-
-    try {
-      const response = await fetch("/api/test", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: "rouge-gorge",
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Une erreur est survenue");
-      }
-
-      console.log(data);
-      setSuccess("Test réussi !");
-    } catch (error) {
-      console.error("Erreur:", error);
-      setError(
-        error instanceof Error ? error.message : "Une erreur est survenue"
-      );
     } finally {
       setIsLoading(false);
     }

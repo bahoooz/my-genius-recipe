@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "Données de recette invalides" }, { status: 400 });
         }
 
-        const { data, error } = await supabase.from("favorite_recipes").insert({
+        const { error } = await supabase.from("favorite_recipes").insert({
             user_id: user.id,
             title: recipe.title || "Recette sans titre",
             description: recipe.description || "",

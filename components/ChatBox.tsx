@@ -18,7 +18,6 @@ import { Button } from "./ui/button";
 import { useRecipeStore } from "@/store/recipeStore";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/useAuth";
-import NextImage from "next/image";
 
 export default function ChatBox() {
   const setRecipeData = useRecipeStore((state) => state.setRecipeData);

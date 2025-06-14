@@ -5,14 +5,9 @@ import Title from "@/components/Title";
 import { Button } from "@/components/ui/button";
 import {
   BadgeEuro,
-  ChevronLeft,
-  ChevronRight,
   CircleUserRound,
-  CookingPot,
   Mail,
-  Star,
 } from "lucide-react";
-import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@/lib/useAuth";
 import BeforeDesktopVersion from "@/components/BeforeDesktopVersion";

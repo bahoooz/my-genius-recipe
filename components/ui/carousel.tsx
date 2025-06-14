@@ -4,7 +4,7 @@ import * as React from "react"
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from "embla-carousel-react"
-import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -173,7 +173,6 @@ function CarouselItem({ className, ...props }: React.ComponentProps<"div">) {
 
 function CarouselPrevious({
   className,
-  variant = "noBorder",
   size = "icon",
   ...props
 }: React.ComponentProps<typeof Button>) {
@@ -203,7 +202,6 @@ function CarouselPrevious({
 
 function CarouselNext({
   className,
-  variant = "outline",
   size = "icon",
   ...props
 }: React.ComponentProps<typeof Button>) {
@@ -233,11 +231,10 @@ function CarouselNext({
 
 function CarouselPreviousForPricing({
   className,
-  variant = "noBorder",
   size = "icon",
   ...props
 }: React.ComponentProps<typeof Button>) {
-  const { orientation, scrollPrev, canScrollPrev } = useCarousel()
+  const { scrollPrev, canScrollPrev } = useCarousel()
 
   return (
     <Button
@@ -260,11 +257,10 @@ function CarouselPreviousForPricing({
 
 function CarouselNextForPricing({
   className,
-  variant = "outline",
   size = "icon",
   ...props
 }: React.ComponentProps<typeof Button>) {
-  const { orientation, scrollNext, canScrollNext } = useCarousel()
+  const { scrollNext, canScrollNext } = useCarousel()
 
   return (
     <Button
@@ -287,11 +283,10 @@ function CarouselNextForPricing({
 
 function CarouselPreviousForFavoriteRecipes({
   className,
-  variant = "noBorder",
   size = "icon",
   ...props
 }: React.ComponentProps<typeof Button>) {
-  const { orientation, scrollPrev, canScrollPrev } = useCarousel()
+  const { scrollPrev, canScrollPrev } = useCarousel()
 
   return (
     <Button
@@ -314,11 +309,10 @@ function CarouselPreviousForFavoriteRecipes({
 
 function CarouselNextForFavoriteRecipes({
   className,
-  variant = "outline",
   size = "icon",
   ...props
 }: React.ComponentProps<typeof Button>) {
-  const { orientation, scrollNext, canScrollNext } = useCarousel()
+  const { scrollNext, canScrollNext } = useCarousel()
 
   return (
     <Button

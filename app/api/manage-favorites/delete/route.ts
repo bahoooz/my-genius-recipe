@@ -24,7 +24,7 @@ export async function DELETE(req: NextRequest) {
             return NextResponse.json({ error: "ID de recette requis" }, { status: 400 });
         }
 
-        const { data, error } = await supabase
+        const { error } = await supabase
             .from("favorite_recipes")
             .delete()
             .eq("user_id", user.id)

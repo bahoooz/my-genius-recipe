@@ -32,7 +32,7 @@ export default function Pricing() {
                       title={plan.plan}
                       description={plan.description}
                       advantages={plan.advantages.map((advantage) => (
-                        <p className="flex items-center gap-2">
+                        <p className="flex items-center gap-2" key={advantage.text}>
                           {advantage.isAdvantage ? (
                             <Cookie className="min-h-6 min-w-6 text-yellow-btn" />
                           ) : (
