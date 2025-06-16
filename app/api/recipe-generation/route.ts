@@ -97,10 +97,10 @@ export async function POST(req: NextRequest) {
           Authorization: `Bearer ${process.env.OPEN_API_KEY}`,
         },
         body: JSON.stringify({
-          model: "dall-e-2",
+          model: "dall-e-3",
           prompt: `Une belle photo de ${recipe.split('*')[1]}, style photographie culinaire professionnelle, éclairage parfait, composition élégante`,
           n: 1,
-          size: "512x512",
+          size: "1024x1024",
         }),
       });
 

@@ -22,6 +22,8 @@ import { useAuth } from "@/lib/useAuth";
 export default function ChatBox() {
   const setRecipeData = useRecipeStore((state) => state.setRecipeData);
   const setDialogOpen = useRecipeStore((state) => state.setDialogOpen);
+  const setIsLoadingRecipeGeneration = useRecipeStore((state) => state.setIsLoadingRecipeGeneration);
+  const isLoadingRecipeGeneration = useRecipeStore((state) => state.isLoadingRecipeGeneration);
   const [ingredients, setIngredients] = useState("");
   const [coldRecipe, setColdRecipe] = useState(false);
   const [hotRecipe, setHotRecipe] = useState(false);
@@ -31,7 +33,6 @@ export default function ChatBox() {
   const [numberOfVersions, setNumberOfVersions] = useState(1);
   const [userData, setUserData] = useState<any>(null);
   const { user } = useAuth();
-  const [isLoading, setIsLoading] = useState(false);
 
   const filters = {
     cold_recipe: coldRecipe,
@@ -44,7 +45,7 @@ export default function ChatBox() {
 
   const handleGenerated = async () => {
     try {
-      setIsLoading(true);
+      setIsLoadingRecipeGeneration(true);
       const recipe = await fetch("/api/recipe-generation", {
         method: "POST",
         body: JSON.stringify({
@@ -55,10 +56,10 @@ export default function ChatBox() {
       const data = await recipe.json();
       setRecipeData(data);
       setDialogOpen(true);
-      setIsLoading(false);
+      setIsLoadingRecipeGeneration(false);
     } catch (error) {
       console.log(error);
-      setIsLoading(false);
+      setIsLoadingRecipeGeneration(false);
     }
   };
 
@@ -83,7 +84,7 @@ export default function ChatBox() {
       <div className=" bg-[var(--color-brown-1)] p-3 rounded-2xl overflow-hidden">
         <Textarea
           className="bg-[var(--color-brown-2)] border-none outline-none text-white placeholder:text-[#EBEBEB] h-14 max-h-14 rounded-lg mb-8"
-          placeholder="Entrez les ingrédients ici..."
+          placeholder="Entrez les ingrédients ici... (3 ingrédients min. recommandés)"
           value={ingredients}
           onChange={(e) => setIngredients(e.target.value)}
         />
@@ -166,9 +167,9 @@ export default function ChatBox() {
         <Button
           onClick={handleGenerated}
           className="bg-[var(--color-brown-2)] rounded-xl mt-4 ml-auto"
-          disabled={isLoading}
+          disabled={isLoadingRecipeGeneration}
         >
-          {isLoading ? (
+          {isLoadingRecipeGeneration ? (
             <Loader2 className="animate-spin" />
           ) : (
             <div className="flex items-center gap-2">

@@ -1,0 +1,92 @@
+[
+    {
+      "name": "Alain Ducasse",
+      "histoire": "Chef français emblématique, Alain Ducasse a obtenu plus de 20 étoiles Michelin au cours de sa carrière. Il est reconnu pour son influence dans la haute gastronomie mondiale. 🍾",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Alain_Ducasse.jpg/330px-Alain_Ducasse.jpg",
+      "date": "13/09/1956"
+    },
+    {
+      "name": "Gordon Ramsay",
+      "histoire": "Chef britannique mondialement connu pour ses restaurants étoilés et ses émissions de télévision, Gordon Ramsay possède un style aussi tranchant que ses couteaux. 🍾",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Gordon_Ramsay.jpg/330px-Gordon_Ramsay.jpg",
+      "date": "08/11/1966"
+    },
+    {
+      "name": "Massimo Bottura",
+      "histoire": "Chef italien à la tête de l'Osteria Francescana, élue plusieurs fois meilleure table du monde, Bottura révolutionne la cuisine italienne avec audace. 🍾",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Massimo_Bottura_Rimini.jpg/330px-Massimo_Bottura_Rimini.jpg",
+      "date": "30/09/1962"
+    },
+    {
+      "name": "Yannick Alléno",
+      "histoire": "Chef français innovant, connu pour sa recherche sur les sauces modernes. Il dirige plusieurs établissements étoilés à Paris et ailleurs. 🍾",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Yannick_All%C3%A9no-_Goeffroy_de_Boismenu.jpg/330px-Yannick_All%C3%A9no-_Goeffroy_de_Boismenu.jpg",
+      "date": "16/12/1968"
+    },
+    {
+      "name": "René Redzepi",
+      "histoire": "Chef danois du célèbre Noma, pionnier de la nouvelle cuisine nordique. Il utilise des ingrédients locaux et sauvages dans des créations uniques. 🍾",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Ren%C3%A9_Redzepi_en_la_cena_de_las_14_estrellas_Michel%C3%ADn_del_restaurante_Zaldiar%C3%A1n.jpg/330px-Ren%C3%A9_Redzepi_en_la_cena_de_las_14_estrellas_Michel%C3%ADn_del_restaurante_Zaldiar%C3%A1n.jpg",
+      "date": "16/12/1977"
+    },
+    {
+      "name": "Joël Robuchon",
+      "histoire": "Chef français légendaire, il a été l'homme le plus étoilé au monde avec un total de 32 étoiles Michelin à son apogée. 🍾",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Jo%C3%ABl_Robuchon.jpg/250px-Jo%C3%ABl_Robuchon.jpg",
+      "date": "07/04/1945 06/08/2018"
+    },
+    {
+      "name": "Enrique Olvera",
+      "histoire": "Chef mexicain du restaurant Pujol à Mexico, il modernise la cuisine mexicaine en revisitant les recettes traditionnelles avec finesse. 🍾",
+      "image": "https://discoandtacos.com/wp-content/uploads/2023/02/enrique-olvera-ft-blog0118-59d1e16c1f1246f0b728cd7e8cb2b04d.jpg",
+      "date": "29/01/1976"
+    },
+    {
+      "name": "Andreas Caminada",
+      "histoire": "Chef suisse prodige, il a obtenu 3 étoiles Michelin pour son restaurant Schloss Schauenstein. Il allie précision et terroir alpin. 🍾",
+      "image": "https://imgs.search.brave.com/zvRHtVhTfExlHEA8j78Ov_Ck6EE7PNsKJXXDphbAKQE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4u/c2hvcGlmeS5jb20v/cy9maWxlcy8xLzA1/NjgvMzE3My84MDM0/L2ZpbGVzL0FuZHJl/YXNDYW1pbmFkYV9w/cm9maWxlLmpwZz92/PTE2NjQyMjcyMzc",
+      "date": "06/05/1977"
+    },
+    {
+      "name": "Anne-Sophie Pic",
+      "histoire": "Seule cheffe française 3 étoiles Michelin, héritière d'une dynastie culinaire. Sa cuisine est élégante, féminine et puissante. 🍾",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Anne-Sophie_Pic.jpg/330px-Anne-Sophie_Pic.jpg",
+      "date": "12/07/1969"
+    },
+    {
+      "name": "Dominique Crenn",
+      "histoire": "Première femme aux États-Unis à décrocher 3 étoiles Michelin, cette cheffe française défend une cuisine poétique et durable. 🍾",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Dominique_Crenn.jpg/330px-Dominique_Crenn.jpg",
+      "date": "07/04/1965"
+    },
+    {
+      "name": "Clare Smyth",
+      "histoire": "Cheffe nord-irlandaise, formée chez Gordon Ramsay, elle a obtenu 3 étoiles pour son propre restaurant à Londres, Core by Clare Smyth. 🍾",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Clare_Smyth_in_2018.png/330px-Clare_Smyth_in_2018.png",
+      "date": "06/09/1978"
+    },
+    {
+      "name": "Helena Rizzo",
+      "histoire": "Ancienne mannequin devenue cheffe, Helena dirige Maní à São Paulo. Elle marie techniques modernes et cuisine brésilienne. 🍾",
+      "image": "https://imgs.search.brave.com/EFD6egLm6PzaQ3oGh0qdjjwvF1ztz8grJDAei0_zTXE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9yZXNp/emUtZWxsZS5sYWRt/ZWRpYS5mci9yY3Jv/cC82MzgsLGZvcmNl/eC9pbWcvdmFyL3Bs/YWluX3NpdGUvc3Rv/cmFnZS9pbWFnZXMv/ZWxsZS1hLXRhYmxl/L21lbnVzLWRlLWNo/ZWZzL2NoZWZzL3Jl/Y2V0dGVzLWhlbGVu/YS1yaXp6by84MTE0/MTU4Ny0xLWZyZS1G/Ui9SZWNldHRlcy1k/LUhlbGVuYS1SaXp6/by5qcGc",
+      "date": "06/02/1978"
+    },
+    {
+      "name": "Carme Ruscalleda",
+      "histoire": "Cheffe catalane, elle a accumulé 7 étoiles Michelin au cours de sa carrière, un record mondial pour une femme cheffe. 🍾",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/2/2c/Carme_Ruscalleda_by_foto-di-matti_2905.jpg",
+      "date": "08/05/1952"
+    },
+    {
+      "name": "Nadia Santini",
+      "histoire": "Cheffe italienne, elle dirige le restaurant familial Dal Pescatore, 3 étoiles Michelin depuis des décennies. 🍾",
+      "image": "https://imgs.search.brave.com/LMkNK3KCioHlQal2GLGGwxOO-WK4qnnQtP-RKFMG_Xw/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pLmRh/aWx5bWFpbC5jby51/ay9pL3BpeC8yMDEz/LzA0LzAzL2FydGlj/bGUtMjMwMzQ3NS0x/OTEwNDlDRDAwMDAw/NURDLTk3XzMwNng0/NTQuanBn",
+      "date": "13/11/1953"
+    },
+    {
+      "name": "Hélène Darroze",
+      "histoire": "Cheffe française étoilée à Paris et à Londres, elle incarne une cuisine du cœur et de terroir. Jurée de Top Chef France. 🍾",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/H%C3%A9l%C3%A8ne_Darroze.jpg/330px-H%C3%A9l%C3%A8ne_Darroze.jpg",
+      "date": "23/02/1967"
+    }
+  ]
