@@ -10,15 +10,14 @@ import {
 import { Dialog } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { useRecipeStore } from "@/store/recipeStore";
-import { ArrowLeft, Carrot, ChefHat, RotateCcw, Star, Eye, Crown } from "lucide-react";
+import { ArrowLeft, Carrot, ChefHat, RotateCcw, Star, Eye, Crown, CircleCheckBig, CircleX } from "lucide-react";
 import { useAuth } from "@/lib/useAuth";
 import { supabase } from "@/lib/supabase";
 import { getUserSubscription } from "@/lib/utils";
 
 export default function ResponseRecipe() {
-  const { isDialogOpen, setDialogOpen, recipeData } = useRecipeStore();
+  const { isDialogOpen, setDialogOpen, recipeData, setIsOpenImageRecipe, setImageRecipe, setIsToastNotificationOpen, setToastNotification } = useRecipeStore();
   const [isOpenStepsRecipe, setIsOpenStepsRecipe] = useState(false);
-  const { setIsOpenImageRecipe, setImageRecipe } = useRecipeStore();
   const [subscription, setSubscription] = useState<string | null>(null);
   const { user } = useAuth();
 
@@ -28,7 +27,12 @@ export default function ResponseRecipe() {
 
   const handleAddToFavorites = async () => {
     if (!user) {
-      alert("Vous devez être connecté pour ajouter des favoris");
+      setIsToastNotificationOpen(true);
+              setToastNotification({
+                text: "Connecte-toi pour ajouter des recettes à tes favoris !",
+                icon: <CircleX size={24} />,
+                bgColor: "#B34646",
+              });
       return;
     }
 
@@ -59,13 +63,36 @@ export default function ResponseRecipe() {
       const result = await response.json();
 
       if (response.ok) {
-        alert("Recette ajoutée aux favoris avec succès !");
+        setIsToastNotificationOpen(true);
+        setToastNotification({
+          text: "Recette ajoutée aux favoris avec succès !",
+          icon: <CircleCheckBig size={24} />,
+          bgColor: "#05df72",
+        });
+      } else if (response.status === 409) {
+        // Cas spécifique : recette déjà en favoris
+        setIsToastNotificationOpen(true);
+        setToastNotification({
+          text: "Cette recette est déjà dans vos favoris !",
+          icon: <CircleX size={24} />,
+          bgColor: "#B34646",
+        });
       } else {
-        alert(result.error || "Erreur lors de l'ajout aux favoris");
+        setIsToastNotificationOpen(true);
+        setToastNotification({
+          text: result.error || "Erreur lors de l'ajout aux favoris",
+          icon: <CircleX size={24} />,
+          bgColor: "#B34646",
+        });
       }
     } catch (error) {
       console.error("Erreur:", error);
-      alert("Erreur lors de l'ajout aux favoris");
+      setIsToastNotificationOpen(true);
+      setToastNotification({
+        text: "Erreur lors de l'ajout aux favoris",
+        icon: <CircleX size={24} />,
+        bgColor: "#B34646",
+      });
     }
   };
 
@@ -140,7 +167,7 @@ export default function ResponseRecipe() {
               <>
                 <div className="bg-white p-2 rounded-xl mb-4 h-[150px] relative">
                   <p className="text-black text-sm">{description}</p>
-                  <span className="absolute -bottom-2 -left-2 text-4xl -rotate-20">
+                  <span className="absolute -bottom-2 -left-4 text-4xl -rotate-20">
                     🥤
                   </span>
                 </div>
@@ -195,7 +222,7 @@ export default function ResponseRecipe() {
                   <ChefHat className="min-w-5 min-h-5" /> Comment je prépare ça ?
                 </Button>
                 
-                <Button disabled={subscription === "free"} size={"lg"} className="relative bg-white text-red border-2 border-red w-full" onClick={() => {
+                <Button disabled={subscription === "free" || !recipeData.imageUrl} size={"lg"} className="relative bg-white text-red border-2 border-red w-full" onClick={() => {
                   setIsOpenImageRecipe(true);
                   setImageRecipe(recipeData?.imageUrl);
                 }}>

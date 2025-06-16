@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
-  const { ingredients, filters } = await req.json();
+  const { ingredients, filters, remainingRecipes } = await req.json();
 
   const {
     cold_recipe,
@@ -11,6 +11,14 @@ export async function POST(req: NextRequest) {
     image,
     number_of_versions,
   } = filters;
+
+  // Vérifier la limite de recettes pour les utilisateurs non-connectés
+  if (typeof remainingRecipes === 'number' && remainingRecipes <= 0) {
+    return NextResponse.json(
+      { error: "Limite de recettes gratuites atteinte. Connectez-vous pour continuer." },
+      { status: 429 }
+    );
+  }
 
   const message = `Tu es un expert en cuisine dans toutes les cuisines du monde, en fonction des ingrédients que tu reçois tu dois générer ${number_of_versions} recette(s), si aucun des filtres suivants ne sont indiqués, tu as carte blanche pour le type de recette que tu veux générer, sinon prends en compte les filtres présents dans ta génération de recettes : cold_recipe=${cold_recipe}, hot_recipe=${hot_recipe}, sweet_recipe=${sweet_recipe}, salty_recipe=${salty_recipe}, image=${image}.
 
@@ -108,7 +116,14 @@ export async function POST(req: NextRequest) {
       imageUrl = imageData.data[0].url;
     }
 
-    return NextResponse.json({ recipe, imageUrl }, { status: 200 });
+    // Calculer le nouveau nombre de recettes restantes pour les utilisateurs non-connectés
+    const newRemainingRecipes = typeof remainingRecipes === 'number' ? Math.max(0, remainingRecipes - 1) : null;
+
+    return NextResponse.json({ 
+      recipe, 
+      imageUrl, 
+      remainingRecipes: newRemainingRecipes 
+    }, { status: 200 });
 
   } catch (error) {
     return NextResponse.json(

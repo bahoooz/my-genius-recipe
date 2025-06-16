@@ -13,6 +13,7 @@ import {
   CookingPot,
   Crown,
   Loader2,
+  CircleX,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { useRecipeStore } from "@/store/recipeStore";
@@ -20,10 +21,17 @@ import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/useAuth";
 
 export default function ChatBox() {
-  const setRecipeData = useRecipeStore((state) => state.setRecipeData);
-  const setDialogOpen = useRecipeStore((state) => state.setDialogOpen);
-  const setIsLoadingRecipeGeneration = useRecipeStore((state) => state.setIsLoadingRecipeGeneration);
-  const isLoadingRecipeGeneration = useRecipeStore((state) => state.isLoadingRecipeGeneration);
+  const { 
+    setRecipeData, 
+    setDialogOpen, 
+    setIsLoadingRecipeGeneration, 
+    isLoadingRecipeGeneration,
+    getRemainingRecipes,
+    setRemainingRecipes,
+    setIsToastNotificationOpen,
+    setToastNotification 
+  } = useRecipeStore();
+  
   const [ingredients, setIngredients] = useState("");
   const [coldRecipe, setColdRecipe] = useState(false);
   const [hotRecipe, setHotRecipe] = useState(false);
@@ -45,15 +53,40 @@ export default function ChatBox() {
 
   const handleGenerated = async () => {
     try {
+      const currentRemainingRecipes = !user ? getRemainingRecipes() : null;
+
       setIsLoadingRecipeGeneration(true);
       const recipe = await fetch("/api/recipe-generation", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           ingredients,
           filters,
+          remainingRecipes: currentRemainingRecipes,
         }),
       });
+      
       const data = await recipe.json();
+      
+      // Si la réponse contient un nouveau nombre de recettes restantes, le mettre à jour
+      if (data.remainingRecipes !== null && data.remainingRecipes !== undefined) {
+        setRemainingRecipes(data.remainingRecipes);
+      }
+      
+      // Gérer les erreurs de limite
+      if (recipe.status === 429) {
+        setIsToastNotificationOpen(true);
+        setToastNotification({
+          text: data.error,
+          icon: <CircleX size={24} />,
+          bgColor: "#B34646",
+        });
+        setIsLoadingRecipeGeneration(false);
+        return;
+      }
+      
       setRecipeData(data);
       setDialogOpen(true);
       setIsLoadingRecipeGeneration(false);
@@ -125,7 +158,7 @@ export default function ChatBox() {
             <ChatBoxButton
               icon={
                 <div>
-                  {userData?.subscription === "free" && (
+                  {userData?.subscription === "free" || !user && (
                     <Crown className="absolute top-1/2 left-2 -translate-y-1/2 min-w-[24px] min-h-[24px] text-yellow-500" />
                   )}{" "}
                   <Image className="min-w-6 min-h-6" />
@@ -134,12 +167,12 @@ export default function ChatBox() {
               color="#5AC89F"
               onClick={() => setImage(!image)}
               isSelected={image}
-              isDisabled={userData?.subscription === "free"}
+              isDisabled={userData?.subscription === "free" || !user}
             />
             <ChatBoxButton
               icon={
                 <div>
-                  {userData?.subscription === "free" && (
+                  {userData?.subscription === "free" || !user && (
                     <Crown className="absolute top-1/2 left-2 -translate-y-1/2 min-w-[24px] min-h-[24px] text-yellow-500" />
                   )}
                   <FileStack className="min-w-6 min-h-6" />
@@ -158,7 +191,7 @@ export default function ChatBox() {
                 }
               }}
               isSelected={true}
-              isDisabled={userData?.subscription === "free"}
+              isDisabled={userData?.subscription === "free" || !user}
             />
           </div>
         </div>
@@ -167,7 +200,7 @@ export default function ChatBox() {
         <Button
           onClick={handleGenerated}
           className="bg-[var(--color-brown-2)] rounded-xl mt-4 ml-auto"
-          disabled={isLoadingRecipeGeneration}
+          disabled={isLoadingRecipeGeneration || (!user && getRemainingRecipes() <= 0)}
         >
           {isLoadingRecipeGeneration ? (
             <Loader2 className="animate-spin" />

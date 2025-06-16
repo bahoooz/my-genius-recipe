@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Button } from "./ui/button";
-import { BadgePlus } from "lucide-react";
+import { BadgePlus, Eye, EyeOff } from "lucide-react";
 import { signUp } from "@/lib/supabase";
 
 export default function SignUpForm() {
@@ -15,6 +15,8 @@ export default function SignUpForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -87,7 +89,7 @@ export default function SignUpForm() {
         />
       </div>
       <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-4">
-        <div className="flex flex-col gap-2 w-full">
+        <div className="flex flex-col gap-2 w-full relative">
           <Label className="text-brown-2 font-medium text-base">
             Mot de passe
           </Label>
@@ -97,10 +99,11 @@ export default function SignUpForm() {
             className="border-2 border-brown-2 placeholder:text-gray-500"
             placeholder="Écris ton mot de passe ici..."
             required
-            type="password"
+            type={isPasswordVisible ? "text" : "password"}
           />
+          <Button onClick={() => setIsPasswordVisible(!isPasswordVisible)} className="absolute right-0 bottom-0 bg-brown-2/60">{isPasswordVisible ? <EyeOff className="text-black" /> : <Eye className="text-black" />}</Button>
         </div>
-        <div className="flex flex-col gap-2 w-full">
+        <div className="flex flex-col gap-2 w-full relative">
           <Label className="text-brown-2 font-medium text-base">
             Confirmer
           </Label>
@@ -110,8 +113,9 @@ export default function SignUpForm() {
             className="border-2 border-brown-2 placeholder:text-gray-500"
             placeholder="Confirme ton mot de passe ici..."
             required
-            type="password"
+            type={isConfirmPasswordVisible ? "text" : "password"}
           />
+          <Button onClick={() => setIsConfirmPasswordVisible(!isConfirmPasswordVisible)} className="absolute right-0 bottom-0 bg-brown-2/60">{isConfirmPasswordVisible ? <EyeOff className="text-black" /> : <Eye className="text-black" />}</Button>
         </div>
       </div>
       {error && (

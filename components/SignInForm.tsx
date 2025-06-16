@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Button } from "./ui/button";
-import { CircleArrowUp } from "lucide-react";
+import { CircleArrowUp, Eye, EyeOff } from "lucide-react";
 import { signIn } from "@/lib/supabase";
 
 export default function SignInForm() {
@@ -13,6 +13,7 @@ export default function SignInForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -57,7 +58,7 @@ export default function SignInForm() {
           type="email"
         />
       </div>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 relative">
         <Label className="text-brown-2 font-medium text-base">
           Mot de passe
         </Label>
@@ -67,8 +68,9 @@ export default function SignInForm() {
           className="border-2 border-brown-2 placeholder:text-gray-500"
           placeholder="Écris ton mot de passe ici..."
           required
-          type="password"
+          type={isPasswordVisible ? "text" : "password"}
         />
+        <Button onClick={() => setIsPasswordVisible(!isPasswordVisible)} className="absolute right-0 bottom-0 bg-brown-2/60">{isPasswordVisible ? <EyeOff className="text-black" /> : <Eye className="text-black" />}</Button>
       </div>
       {error && (
         <p className="text-red text-sm font-medium text-center">{error}</p>

@@ -13,7 +13,7 @@ export default function LoadingRecipeScreen() {
   }, []);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center w-full p-4 h-full bg-black/50">
+    <div className="fixed inset-0 z-60 flex items-center justify-center w-full p-4 h-full bg-black/50">
       <div className="w-full max-w-[400px] bg-red rounded-2xl p-4 text-white">
         <div className="flex items-center gap-6 mb-8">
           <div>

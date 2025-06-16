@@ -19,7 +19,7 @@ export default function ProfilePage() {
   const [subscription, setSubscription] = useState<string | null>(null);
   const username = user?.user_metadata?.username || "Utilisateur";
   const email = user?.email || "Aucun email";
-  const account_type = subscription === "free" ? "gratuit" : "Premium";
+  const account_type = subscription === "free" ? "Free" : subscription === "premium" ? "Premium" : subscription === "infinite" ? "Infinite" : "Unknown";
 
   useEffect(() => {
     async function getUserSubscription() {

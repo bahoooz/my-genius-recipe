@@ -20,6 +20,24 @@ export async function POST(req: NextRequest) {
 
         const { recipe } = await req.json();
 
+        // Vérifier si l'utilisateur a déjà cette recette dans ses favoris
+        if (recipe.title) {
+            const { data: existingRecipe, error: checkError } = await supabase
+                .from("favorite_recipes")
+                .select("id")
+                .eq("user_id", user.id)
+                .eq("title", recipe.title)
+                .single();
+
+            if (checkError && checkError.code !== 'PGRST116') {
+                return NextResponse.json({ error: "Erreur lors de la vérification des favoris" }, { status: 500 });
+            }
+
+            if (existingRecipe) {
+                return NextResponse.json({ error: "Cette recette est déjà dans vos favoris" }, { status: 409 });
+            }
+        }
+
         if (!recipe || !recipe.content) {
             return NextResponse.json({ error: "Données de recette invalides" }, { status: 400 });
         }

@@ -8,6 +8,7 @@ import Title from "@/components/Title";
 import Image from "next/image";
 
 export default function Home() {
+
   return (
     <div className="px-4 pt-12 md:pt-0 md:flex md:items-center md:justify-center md:min-h-screen relative">
       <div className="md:flex md:justify-center md:items-center md:gap-12 lg:gap-8 xl:gap-16 lg:h-[70dvh] lg:ml-12">
