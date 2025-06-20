@@ -1,3 +1,4 @@
+import { supabase } from "@/lib/supabase";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -12,13 +13,72 @@ export async function POST(req: NextRequest) {
     number_of_versions,
   } = filters;
 
-  // Vérifier la limite de recettes pour les utilisateurs non-connectés
-  if (typeof remainingRecipes === 'number' && remainingRecipes <= 0) {
-    return NextResponse.json(
-      { error: "Limite de recettes gratuites atteinte. Connectez-vous pour continuer." },
-      { status: 429 }
-    );
+  const authHeader = req.headers.get("authorization");
+  const token = authHeader?.replace("Bearer ", "");
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser(token);
+
+  const { data } = await supabase
+    .from("user_profiles")
+    .select("*")
+    .eq("user_id", user?.id)
+    .single();
+
+  if (user) {
+    // Logique de verification des 10 recettes générées par mois pour les utilisateurs connectés
+
+    const now = new Date();
+    const isFirstDayOfMonth = now.getDate() === 1;
+
+    if (data?.subscription === "free") {
+      if (isFirstDayOfMonth) {
+        await supabase
+          .from("user_profiles")
+          .update({
+            recipe_generation_count: 1,
+          })
+          .eq("user_id", user.id);
+      }
+
+      if (data?.recipe_generation_count >= 10) {
+        return NextResponse.json(
+          {
+            error:
+              "Limite de génération de recettes atteinte. Passez au plan premium ou attendez le mois prochain.",
+          },
+          { status: 429 }
+        );
+      }
+    } else if (data?.subscription === "premium") {
+      if (isFirstDayOfMonth) {
+        await supabase
+          .from("user_profiles")
+          .update({
+            recipe_generation_count: 1,
+          })
+          .eq("user_id", user.id);
+      }
+
+      if (data?.recipe_generation_count >= 100) {
+        return NextResponse.json(
+          {
+            error:
+              "Limite de génération de recettes atteinte. Passez au plan infinite ou attendez le mois prochain.",
+          },
+          { status: 429 }
+        );
+      }
+    }
+
+  } else {
+    // Logique pour ceux qui sont pas connectés
+    console.log("Génération de recette pour un utilisateur non connecté");
+    
   }
+
+// Génération de la recette
 
   const message = `Tu es un expert en cuisine dans toutes les cuisines du monde, en fonction des ingrédients que tu reçois tu dois générer ${number_of_versions} recette(s), si aucun des filtres suivants ne sont indiqués, tu as carte blanche pour le type de recette que tu veux générer, sinon prends en compte les filtres présents dans ta génération de recettes : cold_recipe=${cold_recipe}, hot_recipe=${hot_recipe}, sweet_recipe=${sweet_recipe}, salty_recipe=${salty_recipe}, image=${image}.
 
@@ -67,30 +127,33 @@ export async function POST(req: NextRequest) {
   try {
     if (!ingredients) {
       return NextResponse.json(
-        { error: "Ingredients are required" },
+        { error: "Les ingrédients sont requis" },
         { status: 400 }
       );
     }
 
     // Génération de la recette
-    const recipeResponse = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.OPEN_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: "gpt-4-turbo",
-        messages: [
-          {
-            role: "user",
-            content: message,
-          },
-        ],
-        max_tokens: 1000,
-        temperature: 0.8,
-      }),
-    });
+    const recipeResponse = await fetch(
+      "https://api.openai.com/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.OPEN_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: "gpt-4-turbo",
+          messages: [
+            {
+              role: "user",
+              content: message,
+            },
+          ],
+          max_tokens: 1000,
+          temperature: 0.8,
+        }),
+      }
+    );
 
     const recipeData = await recipeResponse.json();
     const recipe = recipeData.choices[0].message.content;
@@ -98,36 +161,69 @@ export async function POST(req: NextRequest) {
     // Génération de l'image si demandée
     let imageUrl = null;
     if (image) {
-      const imageResponse = await fetch("https://api.openai.com/v1/images/generations", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.OPEN_API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: "dall-e-3",
-          prompt: `Une belle photo de ${recipe.split('*')[1]}, style photographie culinaire professionnelle, éclairage parfait, composition élégante`,
-          n: 1,
-          size: "1024x1024",
-        }),
-      });
+      const imageResponse = await fetch(
+        "https://api.openai.com/v1/images/generations",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.OPEN_API_KEY}`,
+          },
+          body: JSON.stringify({
+            model: "dall-e-3",
+            prompt: `Une belle photo de ${
+              recipe.split("*")[1]
+            }, style photographie culinaire professionnelle, éclairage parfait, composition élégante et très réaliste`,
+            n: 1,
+            size: "1024x1024",
+          }),
+        }
+      );
 
       const imageData = await imageResponse.json();
       imageUrl = imageData.data[0].url;
     }
 
     // Calculer le nouveau nombre de recettes restantes pour les utilisateurs non-connectés
-    const newRemainingRecipes = typeof remainingRecipes === 'number' ? Math.max(0, remainingRecipes - 1) : null;
+    const newRemainingRecipes =
+      typeof remainingRecipes === "number"
+        ? Math.max(0, remainingRecipes - 1)
+        : null;
 
-    return NextResponse.json({ 
-      recipe, 
-      imageUrl, 
-      remainingRecipes: newRemainingRecipes 
-    }, { status: 200 });
+    // Incrémenter le compteur de recettes pour les utilisateurs connectés avec subscription free, premium ou infinite
+    if (user) {
+      const { data } = await supabase
+        .from("user_profiles")
+        .select("subscription, recipe_generation_count")
+        .eq("user_id", user.id)
+        .single();
 
+      if (data?.subscription === "free" || data?.subscription === "premium" || data?.subscription === "infinite") {
+        const newCount = (data.recipe_generation_count || 0) + 1;
+        await supabase
+          .from("user_profiles")
+          .update({
+            recipe_generation_count: newCount,
+          })
+          .eq("user_id", user.id);
+      }
+    }
+
+    return NextResponse.json(
+      {
+        recipe,
+        imageUrl,
+        remainingRecipes: newRemainingRecipes,
+      },
+      { status: 200 }
+    );
   } catch (error) {
     return NextResponse.json(
-      { error: "Une erreur est survenue lors de la génération de la recette " + error },
+      {
+        error:
+          "Une erreur est survenue lors de la génération de la recette " +
+          error,
+      },
       { status: 500 }
     );
   }

@@ -41,10 +41,10 @@ export default function Pricing() {
                           {advantage.text}
                         </p>
                       ))}
-                      priceForMonth={plan.priceForMonth}
+                      priceForMonth={ plan.priceForMonth}
                       priceForYear={plan.priceForYear}
-                      linkForPriceMonth={plan.linkForPriceMonth}
-                      linkForPriceYear={plan.linkForPriceYear}
+                      linkForPriceMonth={process.env.NODE_ENV === "development" ? plan.linkForPriceMonthTest || "" : plan.linkForPriceMonth}
+                      linkForPriceYear={process.env.NODE_ENV === "development" ? plan.linkForPriceYearTest || "" : plan.linkForPriceYear}
                       isFree={plan.isFree}
                       image={plan.image || ""}
                     />

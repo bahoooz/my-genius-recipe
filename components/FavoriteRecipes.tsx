@@ -1,4 +1,3 @@
-import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import {
   Carousel,
@@ -113,7 +112,7 @@ export default function FavoriteRecipes() {
         <h2 className="font-fredoka text-2xl text-red font-medium mb-2 ml-1">
           Recettes favorites
         </h2>
-        <CarouselContent>
+        <CarouselContent className={`${favorites.length === 1 && "mb-4"}`}>
           {favorites.map((favoriteRecipe) => (
             <CarouselItem key={favoriteRecipe.id}>
               <div className="p-1">
@@ -123,12 +122,10 @@ export default function FavoriteRecipes() {
                       {favoriteRecipe.title}
                     </h3>
                     {favoriteRecipe.image && (
-                      <Image
+                      <img
                         className="mx-auto rounded-2xl w-full max-w-[350px] lg:h-[150px] lg:hover:h-[286px] lg:cursor-pointer transition-all duration-500 object-cover"
                         src={favoriteRecipe.image}
                         alt={favoriteRecipe.title}
-                        width={512}
-                        height={512}
                       />
                     )}
                     <div className="flex md:flex-col 2xl:flex-row gap-3 justify-between">

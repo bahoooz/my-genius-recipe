@@ -75,6 +75,29 @@ export async function POST(req: Request) {
           throw new Error(`Utilisateur auth non trouvé pour l'email: ${customer.email}`);
         }
         
+        // Récupération des détails de l'abonnement pour déterminer le plan
+        let subscriptionPlan = 'premium'; // Par défaut
+        if (session.subscription) {
+          try {
+            const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
+            const priceId = subscription.items.data[0]?.price.id;
+            
+            // Mappage des prix Stripe vers les noms de plans
+            const priceToPlansMap: { [key: string]: string } = {
+              'price_1RZDUKDVNTY8xoRACeuUsEi0': 'premium', // Premium mensuel
+              'price_1RZDXADVNTY8xoRAfnqRzDRc': 'premium', // Premium annuel
+              'price_1RZE6HDVNTY8xoRAhOgC2Jh6': 'infinite', // Infinite mensuel
+              'price_1RZE6dDVNTY8xoRAIRTyLsy3': 'infinite', // Infinite annuel
+            };
+            
+            subscriptionPlan = priceToPlansMap[priceId] || 'premium';
+            console.log(`Plan déterminé: ${subscriptionPlan} pour le prix: ${priceId}`);
+          } catch (error) {
+            console.error('Erreur lors de la récupération de l\'abonnement:', error);
+            console.log('Utilisation du plan par défaut: premium');
+          }
+        }
+        
         // Recherche du profil utilisateur
         const { data: existingProfile, error: findError } = await supabaseAdmin
           .from('user_profiles')
@@ -86,11 +109,6 @@ export async function POST(req: Request) {
           throw new Error(`Erreur lors de la recherche du profil utilisateur: ${findError.message}`);
         }
       
-        // Vérification si l'utilisateur a déjà un abonnement actif
-        if (existingProfile && existingProfile.subscription) {
-          throw new Error('Un abonnement est déjà actif pour cet utilisateur.');
-        }
-      
         // Si le profil n'existe pas encore, création d'un nouveau profil
         if (!existingProfile) {
           const { data: newProfile, error: createError } = await supabaseAdmin
@@ -98,7 +116,7 @@ export async function POST(req: Request) {
             .insert([{
               user_id: foundAuthUser.id,
               stripe_customer_id: customerId,
-              subscription: session.subscription as string, // Enregistrement de l'ID de l'abonnement
+              subscription: subscriptionPlan, // Enregistrement du nom du plan
             }])
             .select()
             .single();
@@ -107,14 +125,14 @@ export async function POST(req: Request) {
             throw new Error(`Erreur lors de la création du profil utilisateur: ${createError.message}`);
           }
           
-          console.log(`New user profile created: ${JSON.stringify(newProfile)}`);
+          console.log(`Nouveau profil utilisateur créé avec le plan ${subscriptionPlan}: ${JSON.stringify(newProfile)}`);
         } else {
           // Mise à jour des informations du profil utilisateur existant
           const { data: updatedProfile, error: updateError } = await supabaseAdmin
             .from('user_profiles')
             .update({
               stripe_customer_id: customerId,
-              subscription: session.subscription as string, // Mise à jour de l'ID de l'abonnement
+              subscription: subscriptionPlan, // Mise à jour avec le nom du plan
             })
             .eq('user_id', foundAuthUser.id)
             .select()
@@ -124,7 +142,7 @@ export async function POST(req: Request) {
             throw new Error(`Erreur lors de la mise à jour du profil utilisateur: ${updateError.message}`);
           }
           
-          console.log(`Profil utilisateur mis à jour: ${JSON.stringify(updatedProfile)}`);
+          console.log(`Profil utilisateur mis à jour avec le plan ${subscriptionPlan}: ${JSON.stringify(updatedProfile)}`);
         }
         break;
       }
@@ -148,15 +166,16 @@ export async function POST(req: Request) {
           .single();
 
         if (findError || !userProfile) {
-          console.error(`Profil utilisateur non trouvé pour le client avec ID: ${customerId}`);
-          throw new Error('Profil utilisateur non trouvé pour ce client');
+          console.warn(`Profil utilisateur non trouvé pour le client avec ID: ${customerId}. Ceci peut être normal si l'utilisateur n'avait pas encore d'abonnement actif.`);
+          // Ne pas lancer d'erreur - retourner succès silencieusement
+          return new Response(JSON.stringify({ message: 'Aucun profil utilisateur trouvé - aucune action nécessaire' }), { status: 200 });
         }
 
         // Mise à jour des informations du profil utilisateur pour refléter la suppression de l'abonnement
         const { data: updatedProfile, error: updateError } = await supabaseAdmin
           .from('user_profiles')
           .update({
-            subscription: null
+            subscription: 'free' // Retour au plan gratuit
           })
           .eq('user_id', userProfile.user_id)
           .select()
@@ -166,13 +185,13 @@ export async function POST(req: Request) {
           throw new Error(`Erreur lors de la mise à jour du profil utilisateur: ${updateError.message}`);
         }
 
-        console.log(`Abonnement supprimé pour l'utilisateur: ${JSON.stringify(updatedProfile)}`);
+        console.log(`Abonnement supprimé pour l'utilisateur, retour au plan free: ${JSON.stringify(updatedProfile)}`);
 
         break;
       }
       // Gestion des événements non pris en charge
       default:
-        console.error(`Type d'événement non géré: ${eventType}`);
+        console.log(`Type d'événement non géré: ${eventType}`);
     }
 
 
@@ -190,5 +209,5 @@ export async function POST(req: Request) {
   }
 
   // Réponse réussie pour le webhook
-  return new Response(JSON.stringify({}));
+  return new Response(JSON.stringify({ received: true }));
 }

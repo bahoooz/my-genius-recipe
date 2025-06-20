@@ -14,6 +14,7 @@ import {
   Crown,
   Loader2,
   CircleX,
+  CircleUserRound,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { useRecipeStore } from "@/store/recipeStore";
@@ -56,10 +57,16 @@ export default function ChatBox() {
       const currentRemainingRecipes = !user ? getRemainingRecipes() : null;
 
       setIsLoadingRecipeGeneration(true);
+      
+      // Récupérer le token d'authentification via la session
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
+      
       const recipe = await fetch("/api/recipe-generation", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          ...(token && { "Authorization": `Bearer ${token}` })
         },
         body: JSON.stringify({
           ingredients,
@@ -112,6 +119,9 @@ export default function ChatBox() {
     getUserSubscription();
   }, [user?.id]);
 
+  console.log("données user data :", userData);
+  
+
   return (
     <div className="mt-8">
       <div className=" bg-[var(--color-brown-1)] p-3 rounded-2xl overflow-hidden">
@@ -158,8 +168,8 @@ export default function ChatBox() {
             <ChatBoxButton
               icon={
                 <div>
-                  {userData?.subscription === "free" || !user && (
-                    <Crown className="absolute top-1/2 left-2 -translate-y-1/2 min-w-[24px] min-h-[24px] text-yellow-500" />
+                  {!user && (
+                    <CircleUserRound className="absolute top-1/2 left-2 -translate-y-1/2 min-w-[24px] min-h-[24px] text-red" />
                   )}{" "}
                   <Image className="min-w-6 min-h-6" />
                 </div>
@@ -167,12 +177,12 @@ export default function ChatBox() {
               color="#5AC89F"
               onClick={() => setImage(!image)}
               isSelected={image}
-              isDisabled={userData?.subscription === "free" || !user}
+              isDisabled={!user}
             />
             <ChatBoxButton
               icon={
                 <div>
-                  {userData?.subscription === "free" || !user && (
+                  {(userData?.subscription === "free" || !user) && (
                     <Crown className="absolute top-1/2 left-2 -translate-y-1/2 min-w-[24px] min-h-[24px] text-yellow-500" />
                   )}
                   <FileStack className="min-w-6 min-h-6" />
@@ -200,7 +210,7 @@ export default function ChatBox() {
         <Button
           onClick={handleGenerated}
           className="bg-[var(--color-brown-2)] rounded-xl mt-4 ml-auto"
-          disabled={isLoadingRecipeGeneration || (!user && getRemainingRecipes() <= 0)}
+          disabled={isLoadingRecipeGeneration || (!user && getRemainingRecipes() <= 0) || ingredients.length < 3}
         >
           {isLoadingRecipeGeneration ? (
             <Loader2 className="animate-spin" />

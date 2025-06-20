@@ -18,6 +18,8 @@ interface PricingPlanProps {
   isResilable?: boolean;
   isFree?: boolean;
   image?: string;
+  linkForPriceMonthTest?: string;
+  linkForPriceYearTest?: string;
 }
 
 export default function PricingPlan({
@@ -33,6 +35,8 @@ export default function PricingPlan({
   isResilable = true,
   isFree = false,
   image,
+  linkForPriceMonthTest,
+  // linkForPriceYearTest,
 }: PricingPlanProps) {
 
   const { user } = useAuth();
@@ -43,7 +47,7 @@ export default function PricingPlan({
       router.push("/auth?tab=signin");
     }
     
-    window.open(linkForPriceMonth, "_blank");
+    window.open(process.env.NODE_ENV === "development" ? linkForPriceMonthTest : linkForPriceMonth, "_blank");
   };
 
   return (

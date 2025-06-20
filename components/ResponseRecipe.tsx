@@ -42,6 +42,17 @@ export default function ResponseRecipe() {
         data: { session },
       } = await supabase.auth.getSession();
 
+      const recipeToSend = {
+        content: recipeData,
+        title: title || "Recette sans titre",
+        description: description || "",
+        ingredients: ingredients || "",
+        instructions: instructions || "",
+        image: recipeData?.imageUrl || "",
+      };
+
+      console.log("Données de la recette à envoyer:", recipeToSend);
+
       const response = await fetch("/api/manage-favorites/add", {
         method: "POST",
         headers: {
@@ -49,18 +60,14 @@ export default function ResponseRecipe() {
           Authorization: `Bearer ${session?.access_token}`,
         },
         body: JSON.stringify({
-          recipe: {
-            content: recipeData,
-            title: title || "Recette sans titre",
-            description: description || "",
-            ingredients: ingredients || "",
-            instructions: instructions || "",
-            image: recipeData?.imageUrl || "",
-          },
+          recipe: recipeToSend,
         }),
       });
 
       const result = await response.json();
+      
+      console.log("Status de la réponse:", response.status);
+      console.log("Résultat de l'API:", result);
 
       if (response.ok) {
         setIsToastNotificationOpen(true);
@@ -74,6 +81,14 @@ export default function ResponseRecipe() {
         setIsToastNotificationOpen(true);
         setToastNotification({
           text: "Cette recette est déjà dans vos favoris !",
+          icon: <CircleX size={24} />,
+          bgColor: "#B34646",
+        });
+      } else if (response.status === 400) {
+        // Cas spécifique : limite atteinte ou données invalides
+        setIsToastNotificationOpen(true);
+        setToastNotification({
+          text: result.error || "Limite de recettes favorites atteinte",
           icon: <CircleX size={24} />,
           bgColor: "#B34646",
         });
