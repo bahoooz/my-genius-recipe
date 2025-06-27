@@ -8,11 +8,33 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
 export async function POST(req: Request) {
+  // Log détaillé pour diagnostiquer les problèmes en production
+  console.log('🚀 Webhook Stripe appelé - Environnement:', process.env.NODE_ENV);
+  console.log('🔑 Variables d\'environnement présentes:', {
+    hasStripeSecretKey: !!process.env.STRIPE_SECRET_KEY,
+    hasWebhookSecret: !!process.env.STRIPE_WEBHOOK_SECRET,
+    hasSupabaseUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+    hasSupabaseServiceKey: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
+    stripeKeyPrefix: process.env.STRIPE_SECRET_KEY?.substring(0, 10) + '...',
+    webhookSecretPrefix: process.env.STRIPE_WEBHOOK_SECRET?.substring(0, 10) + '...',
+  });
 
-  // Extraction du corps de la requête en tant que texte brut
-  const body = await req.text();
+  // ✅ SOLUTION : Extraction du body RAW avec arrayBuffer()
+  const buffer = await req.arrayBuffer();
+  const body = Buffer.from(buffer).toString('utf8');
+  
   // Récupération de la signature Stripe depuis les en-têtes de la requête
   const signature = (await headers()).get('stripe-signature');
+
+  console.log('📨 Détails de la requête:', {
+    bodyLength: body.length,
+    bufferLength: buffer.byteLength,
+    hasSignature: !!signature,
+    signaturePreview: signature?.substring(0, 20) + '...',
+    bodyIsString: typeof body === 'string',
+    firstChar: body.charAt(0),
+    lastChar: body.charAt(body.length - 1),
+  });
 
   // Vérification si la signature est présente dans les en-têtes
   if (!signature) {
