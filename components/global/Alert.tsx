@@ -2,7 +2,7 @@ import { CircleCheckBig } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useRecipeStore } from "@/store/recipeStore";
 
-export default function FavoriteRecipeAlert({
+export default function Alert({
   icon = <CircleCheckBig size={24} />,
   text = "Texte par défaut",
   bgColor = "#000000",

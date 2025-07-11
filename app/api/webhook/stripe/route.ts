@@ -19,22 +19,12 @@ export async function POST(req: Request) {
     webhookSecretPrefix: process.env.STRIPE_WEBHOOK_SECRET?.substring(0, 10) + '...',
   });
 
-  // ✅ SOLUTION : Extraction du body RAW avec arrayBuffer()
+  // Extraction du body RAW avec arrayBuffer()
   const buffer = await req.arrayBuffer();
   const body = Buffer.from(buffer).toString('utf8');
   
   // Récupération de la signature Stripe depuis les en-têtes de la requête
   const signature = (await headers()).get('stripe-signature');
-
-  console.log('📨 Détails de la requête:', {
-    bodyLength: body.length,
-    bufferLength: buffer.byteLength,
-    hasSignature: !!signature,
-    signaturePreview: signature?.substring(0, 20) + '...',
-    bodyIsString: typeof body === 'string',
-    firstChar: body.charAt(0),
-    lastChar: body.charAt(body.length - 1),
-  });
 
   // Vérification si la signature est présente dans les en-têtes
   if (!signature) {

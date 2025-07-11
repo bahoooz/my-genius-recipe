@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { fredoka, quicksand } from "./font";
-import MobileNavbar from "@/components/MobileNavbar";
-import DesktopNavbar from "@/components/DesktopNavbar";
-import ClientLayout from "@/components/ClientLayout";
+import MobileNavbar from "@/components/global/MobileNavbar";
+import DesktopNavbar from "@/components/global/DesktopNavbar";
+import ClientLayout from "@/components/global/ClientLayout";
 
 export const metadata: Metadata = {
   title: "My Genius Recipe",

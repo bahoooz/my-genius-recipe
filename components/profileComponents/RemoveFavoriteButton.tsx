@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { CircleCheck, CircleX, Star } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/useAuth";
@@ -69,7 +69,7 @@ export default function RemoveFavoriteButton({ id }: { id: string }) {
 
   return (
     <Button
-      className="bg-yellow-btn text-black hover:text-white group hover:scale-105"
+      className="bg-yellow-btn text-black group hover:scale-105"
       size={"lg"}
       onClick={handleRemoveFromFavorites}
       disabled={isLoading}

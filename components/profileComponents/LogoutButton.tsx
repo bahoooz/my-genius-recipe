@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { LogOut } from "lucide-react";
 import { signOut } from "@/lib/supabase";
 import { useState } from "react";

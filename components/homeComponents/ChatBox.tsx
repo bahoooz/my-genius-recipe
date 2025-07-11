@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Textarea } from "./ui/textarea";
+import { Textarea } from "../ui/textarea";
 import ChatBoxButton from "./ChatBoxButton";
 import {
   Candy,
@@ -16,7 +16,7 @@ import {
   CircleX,
   CircleUserRound,
 } from "lucide-react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { useRecipeStore } from "@/store/recipeStore";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/useAuth";
@@ -118,8 +118,6 @@ export default function ChatBox() {
     }
     getUserSubscription();
   }, [user?.id]);
-
-  console.log("données user data :", userData);
   
 
   return (

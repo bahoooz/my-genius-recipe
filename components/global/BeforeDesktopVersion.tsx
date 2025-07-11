@@ -1,6 +1,6 @@
 import React from "react";
 import Lottie from "lottie-react";
-import animationData from "@/components/LoadingLargeScreenAnim.json";
+import animationData from "@/components/global/AnimLoadingLargeScreen.json";
 
 export default function BeforeDesktopVersion({svgHeight, className} : {svgHeight?: string, className?: string}) {
   return (

@@ -1,14 +1,14 @@
 "use client";
 
-import BeforeDesktopVersion from "@/components/BeforeDesktopVersion";
-import SignInForm from "@/components/SignInForm";
-import SignUpForm from "@/components/SignUpForm";
-import Title from "@/components/Title";
+import BeforeDesktopVersion from "@/components/global/BeforeDesktopVersion";
+import SignInForm from "@/components/authComponents/SignInForm";
+import SignUpForm from "@/components/authComponents/SignUpForm";
+import Title from "@/components/global/Title";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
-function AuthContent() {
+function AuthPage() {
   const searchParams = useSearchParams();
   const tabParam = searchParams.get("tab");
   const defaultTab = tabParam === "signin" ? "signin" : "signup";
@@ -56,7 +56,7 @@ function AuthContent() {
 export default function Auth() {
   return (
     <Suspense fallback={<div>Chargement...</div>}>
-      <AuthContent />
+      <AuthPage />
     </Suspense>
   );
 }

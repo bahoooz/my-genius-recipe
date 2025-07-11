@@ -5,8 +5,8 @@ import {
   CarouselContent,
   CarouselPreviousForFavoriteRecipes,
   CarouselNextForFavoriteRecipes,
-} from "./ui/carousel";
-import { Card, CardContent } from "./ui/card";
+} from "../ui/carousel";
+import { Card, CardContent } from "../ui/card";
 import { supabase } from "@/lib/supabase";
 import RemoveFavoriteButton from "./RemoveFavoriteButton";
 import SeeDetailsRecipeButton from "./SeeDetailsRecipeButton";

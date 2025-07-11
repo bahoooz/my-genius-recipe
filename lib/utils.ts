@@ -1,11 +1,6 @@
-import { createClient } from "@supabase/supabase-js"
+import { supabase } from "./supabase";
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -23,7 +18,7 @@ export async function getUserSubscription({user, setSubscription}: getUserSubscr
     .from("user_profiles")
     .select("subscription")
     .eq("user_id", user.id)
-    .single();
+    .maybeSingle(); // ✅ Accepte 0 ou 1 ligne sans exploser
   
   if (error) {
     console.error("Erreur lors de la récupération de l'abonnement:", error);

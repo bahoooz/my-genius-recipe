@@ -1,16 +1,21 @@
 import Image from "next/image";
 import React from "react";
-import { Button } from "./ui/button";
-import { CookingPot } from "lucide-react";
+import RecipeExemple from "./RecipeExemple";
 
 type RecipeImagePreviewProps = {
-  img: string;
   title: string;
+  description: string;
+  ingredients: string[];
+  instructions: string[];
+  image: string;
 };
 
 export default function RecipeImagePreview({
-  img,
   title,
+  description,
+  ingredients,
+  instructions,
+  image,
 }: RecipeImagePreviewProps) {
   return (
     <div className="min-h-32 max-h-32 overflow-hidden flex justify-center pt-12 items-center relative rounded-md">
@@ -18,8 +23,8 @@ export default function RecipeImagePreview({
         {title}
       </h4>
       <div className="absolute inset-0 bg-black/40"></div>
-      <Button className="absolute bg-white/80 text-black rounded-full bottom-3 right-3 h-6"><CookingPot className="min-w-4 min-h-4" /> Voir la recette</Button>
-      <Image src={img} width={1536} height={1024} alt="recipe img" />
+      <RecipeExemple title={title} description={description} ingredients={ingredients} instructions={instructions} image={image} />
+      <Image src={image} width={1536} height={1024} alt="recipe img" />
     </div>
   );
 }

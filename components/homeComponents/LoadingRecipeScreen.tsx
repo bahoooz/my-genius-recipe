@@ -1,7 +1,7 @@
 import Lottie from "lottie-react";
 import React, { useState, useEffect } from "react";
-import loadingCooking from "@/components/LoadingRecipeScreen.json";
-import chefsList from "@/components/ListStarryChef.json";
+import loadingCooking from "@/components/homeComponents/LoadingRecipeScreen.json";
+import chefsList from "@/components/homeComponents/ListStarryChef.json";
 import Image from "next/image";
 
 export default function LoadingRecipeScreen() {

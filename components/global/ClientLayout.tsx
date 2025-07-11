@@ -1,13 +1,11 @@
 "use client";
 
 import React from "react";
-import RecipeImageFullScreen from "./RecipeImageFullScreen";
-import LoadingRecipeScreen from "./LoadingRecipeScreen";
+import RecipeImageFullScreen from "../homeComponents/RecipeImageFullScreen";
+import LoadingRecipeScreen from "../homeComponents/LoadingRecipeScreen";
 import { useRecipeStore } from "@/store/recipeStore";
-import FavoriteRecipeAlert from "./FavoriteRecipeAlert";
+import FavoriteRecipeAlert from "./Alert";
 import RecipesRemaining from "./RecipesRemaining";
-
-
 
 export default function ClientLayout({
   children,

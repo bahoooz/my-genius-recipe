@@ -6,33 +6,51 @@ import {
   DialogContent,
   DialogTitle,
   DialogFooter,
-} from "./ui/dialog";
-import { Dialog } from "./ui/dialog";
-import { Button } from "./ui/button";
+} from "../ui/dialog";
+import { Dialog } from "../ui/dialog";
+import { Button } from "../ui/button";
 import { useRecipeStore } from "@/store/recipeStore";
-import { ArrowLeft, Carrot, ChefHat, RotateCcw, Star, Eye, Crown, CircleCheckBig, CircleX } from "lucide-react";
+import {
+  ArrowLeft,
+  Carrot,
+  ChefHat,
+  RotateCcw,
+  Star,
+  Eye,
+  CircleCheckBig,
+  CircleX,
+} from "lucide-react";
 import { useAuth } from "@/lib/useAuth";
 import { supabase } from "@/lib/supabase";
 import { getUserSubscription } from "@/lib/utils";
 
 export default function ResponseRecipe() {
-  const { isDialogOpen, setDialogOpen, recipeData, setIsOpenImageRecipe, setImageRecipe, setIsToastNotificationOpen, setToastNotification } = useRecipeStore();
+  const {
+    isDialogOpen,
+    setDialogOpen,
+    recipeData,
+    setIsOpenImageRecipe,
+    setImageRecipe,
+    setIsToastNotificationOpen,
+    setToastNotification,
+  } = useRecipeStore();
   const [isOpenStepsRecipe, setIsOpenStepsRecipe] = useState(false);
   const [subscription, setSubscription] = useState<string | null>(null);
   const { user } = useAuth();
 
   useEffect(() => {
-    getUserSubscription({user, setSubscription})
+    getUserSubscription({ user, setSubscription });
+    console.log(subscription)
   }, [user]);
 
   const handleAddToFavorites = async () => {
     if (!user) {
       setIsToastNotificationOpen(true);
-              setToastNotification({
-                text: "Connecte-toi pour ajouter des recettes à tes favoris !",
-                icon: <CircleX size={24} />,
-                bgColor: "#B34646",
-              });
+      setToastNotification({
+        text: "Connecte-toi pour ajouter des recettes à tes favoris !",
+        icon: <CircleX size={24} />,
+        bgColor: "#B34646",
+      });
       return;
     }
 
@@ -65,7 +83,7 @@ export default function ResponseRecipe() {
       });
 
       const result = await response.json();
-      
+
       console.log("Status de la réponse:", response.status);
       console.log("Résultat de l'API:", result);
 
@@ -110,9 +128,6 @@ export default function ResponseRecipe() {
       });
     }
   };
-
-  console.log(recipeData);
-  console.log("URL de l'image:", recipeData?.imageUrl);
 
   if (!recipeData) {
     return null;
@@ -234,14 +249,21 @@ export default function ResponseRecipe() {
                   }}
                   className="bg-white text-[#F4895B] border-2 border-[#F4895B] w-full"
                 >
-                  <ChefHat className="min-w-5 min-h-5" /> Comment je prépare ça ?
+                  <ChefHat className="min-w-5 min-h-5" /> Comment je prépare ça
+                  ?
                 </Button>
-                
-                <Button disabled={subscription === "free" || !recipeData.imageUrl} size={"lg"} className="relative bg-white text-red border-2 border-red w-full" onClick={() => {
-                  setIsOpenImageRecipe(true);
-                  setImageRecipe(recipeData?.imageUrl);
-                }}>
-                  {subscription === "free" && <Crown className="absolute top-1/2 left-2 -translate-y-1/2 min-w-[24px] min-h-[24px] text-yellow-500" />} <Eye className="min-w-5 min-h-5" /> À quoi ça pourrait ressembler ?
+
+                <Button
+                  disabled={!recipeData.imageUrl}
+                  size={"lg"}
+                  className="relative bg-white text-red border-2 border-red w-full"
+                  onClick={() => {
+                    setIsOpenImageRecipe(true);
+                    setImageRecipe(recipeData?.imageUrl);
+                  }}
+                >
+                  <Eye className="min-w-5 min-h-5" /> À quoi ça pourrait
+                  ressembler ?
                 </Button>
               </div>
             )}

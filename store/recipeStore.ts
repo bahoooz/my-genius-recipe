@@ -44,7 +44,6 @@ export const useRecipeStore = create<RecipeState>((set, get) => ({
   },
   isToastNotificationOpen: false,
   remainingRecipes: 5,
-  
   setRecipeData: (data) => set({ recipeData: data }),
   setDialogOpen: (isOpen) => set({ isDialogOpen: isOpen }),
   setIsOpenImageRecipe: (isOpen) => set({ isOpenImageRecipe: isOpen }),
@@ -52,7 +51,6 @@ export const useRecipeStore = create<RecipeState>((set, get) => ({
   setIsLoadingRecipeGeneration: (isLoading) => set({ isLoadingRecipeGeneration: isLoading }),
   setToastNotification: (notification) => set({ ToastNotification: notification }),
   setIsToastNotificationOpen: (isOpen) => set({ isToastNotificationOpen: isOpen }),
-  
   setRemainingRecipes: (count) => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('remainingRecipes', count.toString());
