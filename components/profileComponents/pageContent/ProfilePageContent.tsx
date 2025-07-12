@@ -28,18 +28,37 @@ export default function ProfilePageContent() {
     async function getUserSubscription() {
       if (!user?.id) return;
 
-      const { data, error } = await supabase
+      const { data: existingProfile, error } = await supabase
         .from("user_profiles")
         .select("subscription")
         .eq("user_id", user.id)
-        .maybeSingle(); // ✅ tolère 0 résultat
+        .single() // ✅ tolère 0 résultat
+
+      if (!existingProfile) {
+        async function createUserProfile() {
+          const { error: profileError } = await supabase
+            .from("user_profiles")
+            .insert({
+              user_id: user?.id,
+              subscription: "free", // Valeur par défaut
+            });
+
+          if (profileError) {
+            console.error(
+              "Erreur lors de la création du profil utilisateur:",
+              profileError
+            );
+          }
+        }
+        createUserProfile();
+      }
 
       if (error) {
         console.error("Erreur lors de la récupération de l'abonnement:", error);
         return;
       }
 
-      setSubscription(data?.subscription);
+      setSubscription(existingProfile?.subscription);
     }
 
     getUserSubscription();

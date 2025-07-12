@@ -40,7 +40,7 @@ export default function ResponseRecipe() {
 
   useEffect(() => {
     getUserSubscription({ user, setSubscription });
-    console.log(subscription)
+    console.log(subscription);
   }, [user]);
 
   const handleAddToFavorites = async () => {
@@ -60,13 +60,40 @@ export default function ResponseRecipe() {
         data: { session },
       } = await supabase.auth.getSession();
 
+      // Upload de l'image via l'API route
+      const uploadResponse = await fetch("/api/upload-recipe-image", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          imageUrl: recipeData?.imageUrl,
+          userId: user.id,
+        }),
+      });
+
+      if (!uploadResponse.ok) {
+        const uploadError = await uploadResponse.json();
+        console.error("Erreur d'upload de l'image:", uploadError);
+        setIsToastNotificationOpen(true);
+        setToastNotification({
+          text: "Erreur lors de l'upload de l'image",
+          icon: <CircleX size={24} />,
+          bgColor: "#B34646",
+        });
+        return;
+      }
+
+      const uploadResult = await uploadResponse.json();
+      const imageUrl = uploadResult.imageUrl;
+
       const recipeToSend = {
         content: recipeData,
         title: title || "Recette sans titre",
         description: description || "",
         ingredients: ingredients || "",
         instructions: instructions || "",
-        image: recipeData?.imageUrl || "",
+        image: imageUrl || "",
       };
 
       console.log("Données de la recette à envoyer:", recipeToSend);
