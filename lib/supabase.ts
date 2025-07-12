@@ -68,10 +68,38 @@ export const signOut = async () => {
 };
 
 export const signInWithGoogle = async () => {
+  // Déterminer l'URL de redirection basée sur l'environnement
+  const getRedirectUrl = () => {
+    if (typeof window !== 'undefined') {
+      const origin = window.location.origin;
+      
+      // Si on est en développement local
+      if (origin.includes('localhost')) {
+        return `${origin}/auth/callback/google`;
+      }
+      
+      // Si on est en production
+      if (origin.includes('mygeniusrecipe.com')) {
+        return `${origin}/auth/callback/google`;
+      }
+      
+      // Si on est sur Vercel
+      if (origin.includes('vercel.app')) {
+        return `${origin}/auth/callback/google`;
+      }
+      
+      // Par défaut, utiliser l'origin actuel
+      return `${origin}/auth/callback/google`;
+    }
+    
+    // Fallback pour le rendu côté serveur
+    return 'https://www.mygeniusrecipe.com/auth/callback/google';
+  };
+
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: `${window.location.origin}/auth/callback/google`,
+      redirectTo: getRedirectUrl(),
     },
   });
   return { data, error };

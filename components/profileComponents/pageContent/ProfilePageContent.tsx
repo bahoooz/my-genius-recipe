@@ -9,6 +9,7 @@ import { useAuth } from "@/lib/useAuth";
 import BeforeDesktopVersion from "@/components/global/BeforeDesktopVersion";
 import FavoriteRecipes from "@/components/profileComponents/FavoriteRecipes";
 import { supabase, signOut } from "@/lib/supabase";
+import { UpdatePassword } from "../UpdatePassword";
 
 export default function ProfilePageContent() {
   const { user } = useAuth();
@@ -32,7 +33,7 @@ export default function ProfilePageContent() {
         .from("user_profiles")
         .select("subscription")
         .eq("user_id", user.id)
-        .single() // ✅ tolère 0 résultat
+        .single(); // ✅ tolère 0 résultat
 
       if (!existingProfile) {
         async function createUserProfile() {
@@ -101,9 +102,7 @@ export default function ProfilePageContent() {
               >
                 Se déconnecter
               </Button>
-              <Button size={"lg"} className="bg-[#252525]">
-                Changer mot de passe
-              </Button>
+              <UpdatePassword />
               <Button size={"lg"} className="bg-green-400">
                 Changer abonnement
               </Button>

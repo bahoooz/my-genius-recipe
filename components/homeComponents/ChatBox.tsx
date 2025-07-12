@@ -199,7 +199,8 @@ export default function ChatBox() {
                 }
               }}
               isSelected={true}
-              isDisabled={userData?.subscription === "free" || !user}
+              // isDisabled={userData?.subscription === "free" || !user}
+              isDisabled
             />
           </div>
         </div>

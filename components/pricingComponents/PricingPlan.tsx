@@ -20,8 +20,6 @@ interface PricingPlanProps {
   isResilable?: boolean;
   isFree?: boolean;
   image?: string;
-  linkForPriceMonthTest?: string;
-  linkForPriceYearTest?: string;
 }
 
 export default function PricingPlan({
@@ -29,31 +27,38 @@ export default function PricingPlan({
   description,
   advantages,
   priceForMonth,
-  // priceForYear,
+  priceForYear,
   linkForPriceMonth,
-  // linkForPriceYear,
+  linkForPriceYear,
   isActualPlan = false,
   otherContent,
   isResilable = true,
   isFree = false,
   image,
-  linkForPriceMonthTest,
-}: // linkForPriceYearTest,
-PricingPlanProps) {
+}: PricingPlanProps) {
   const { user } = useAuth();
   const router = useRouter();
 
-  const handlePurchase = () => {
+  const handlePurchaseMonth = () => {
     if (!user) {
       router.push("/auth?tab=signin");
+      return
     }
 
-    window.open(
-      process.env.NODE_ENV === "development"
-        ? linkForPriceMonthTest
-        : linkForPriceMonth,
-      "_blank"
-    );
+    console.log("lien ouvert !")
+
+    window.open(linkForPriceMonth, "_blank");
+  };
+
+  const handlePurchaseYear = () => {
+    if (!user) {
+      router.push("/auth?tab=signin");
+      return
+    }
+
+    console.log("lien ouvert !")
+
+    window.open(linkForPriceYear, "_blank");
   };
 
   return (
@@ -80,12 +85,12 @@ PricingPlanProps) {
         </ul>
       </div>
       {!isFree && (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-4">
           <Button
             disabled={isActualPlan}
             size={"lg"}
             className="bg-yellow-btn text-black"
-            onClick={handlePurchase}
+            onClick={handlePurchaseMonth}
           >
             {isActualPlan ? (
               "Abonnement actuel"
@@ -96,6 +101,20 @@ PricingPlanProps) {
               </>
             )}
           </Button>
+          {!isActualPlan && (
+            <Button
+              disabled={isActualPlan}
+              size={"lg"}
+              className="bg-[#252525] text-white border-2 border-yellow-btn"
+              onClick={handlePurchaseYear}
+            >
+              <>
+                <BadgeEuro className="min-w-6 min-h-6" strokeWidth={1.5} />
+                Souscrire - {priceForYear}€/an
+              </>
+            </Button>
+          )}
+          <span className="text-sm text-yellow-btn">-10% sur l’abonnement annuel comparé au mensuel 🍻 </span>
           {isResilable && (
             <span className="text-sm">Résiliable à tout moment</span>
           )}

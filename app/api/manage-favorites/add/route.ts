@@ -72,7 +72,7 @@ export async function POST(req: NextRequest) {
         .select("*")
         .eq("user_id", user.id);
 
-      if (data?.length && data.length >= 25) {
+      if (data?.length && data.length >= 10) {
         return NextResponse.json(
           { error: "Vous avez atteint la limite de recettes favorites sur le plan gratuit" },
           { status: 400 }
