@@ -9,6 +9,7 @@ export async function POST(req: NextRequest) {
     hot_recipe,
     sweet_recipe,
     salty_recipe,
+    strict_recipe,
     image,
     number_of_versions,
   } = filters;
@@ -71,16 +72,14 @@ export async function POST(req: NextRequest) {
         );
       }
     }
-
   } else {
     // Logique pour ceux qui sont pas connectés
     console.log("Génération de recette pour un utilisateur non connecté");
-    
   }
 
   // Génération de la recette
 
-  const message = `Tu es un expert en cuisine dans toutes les cuisines du monde, en fonction des ingrédients que tu reçois tu dois générer ${number_of_versions} recette(s), si aucun des filtres suivants ne sont indiqués, tu as carte blanche pour le type de recette que tu veux générer, sinon prends en compte les filtres présents dans ta génération de recettes : cold_recipe=${cold_recipe}, hot_recipe=${hot_recipe}, sweet_recipe=${sweet_recipe}, salty_recipe=${salty_recipe}, image=${image}.
+  const message = `Tu es un expert en cuisine dans toutes les cuisines du monde, en fonction des ingrédients que tu reçois tu dois générer ${number_of_versions} recette(s), si aucun des filtres suivants ne sont indiqués, tu as carte blanche pour le type de recette que tu veux générer, sinon prends en compte les filtres présents dans ta génération de recettes : cold_recipe=${cold_recipe}, hot_recipe=${hot_recipe}, sweet_recipe=${sweet_recipe}, salty_recipe=${salty_recipe}, image=${image} et strict_recipe=${strict_recipe}. Strict recipe veut dire que tu dois faire la recette uniquement avec les ingrédients que tu reçois sans en ajouter aucun autre même si tu ne reçois que un ou deux ingrédients, s'il n'est pas true tu peux rajouter quelques ingrédients pour constituer une recette cohérente.
 
   Le plus souvent possible génère des recettes connues déjà existantes en t'appuyant sur ce que tu as comme recettes dans ta base de données, sinon utilise ta créativité pour générer des recettes originales quand c'est compliqué de trouver des recettes connues.
   
@@ -173,7 +172,9 @@ export async function POST(req: NextRequest) {
             model: "dall-e-3",
             prompt: `Une belle photo de ${
               recipe.split("*")[1]
-            }, style photographie culinaire professionnelle, éclairage parfait, composition élégante et très réaliste`,
+            }, avec les ingrédients suivant : ${recipe.split(
+              "$"
+            )}, style photographie culinaire professionnelle, éclairage parfait, composition élégante et très réaliste, doit contenir uniquement les ingrédients de la recette sans en ajouter`,
             n: 1,
             size: "1024x1024",
           }),
@@ -198,7 +199,11 @@ export async function POST(req: NextRequest) {
         .eq("user_id", user.id)
         .single();
 
-      if (data?.subscription === "free" || data?.subscription === "premium" || data?.subscription === "infinite") {
+      if (
+        data?.subscription === "free" ||
+        data?.subscription === "premium" ||
+        data?.subscription === "infinite"
+      ) {
         const newCount = (data.recipe_generation_count || 0) + 1;
         await supabase
           .from("user_profiles")

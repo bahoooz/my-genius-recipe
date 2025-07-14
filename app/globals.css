@@ -6,8 +6,8 @@
   --color-brown-1: #f9b585;
   --color-brown-2: #b17d58;
   --color-navbar-bg: #f5dfbb;
-  --color-yellow-btn: #FFFF91;
-  --color-red: #B34646;
+  --color-yellow-btn: #ffff91;
+  --color-red: #b34646;
 
   --color-chatbox-btn-1: #79b3ff;
   --color-chatbox-btn-2: #ff91da;
@@ -174,4 +174,17 @@
 
 .custom-scrollbar::-webkit-scrollbar-corner {
   background: var(--color-navbar-bg);
+}
+
+.popupinfo::before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-bottom: 12px solid var(--color-bg);
+  right: 10px;
+  top: 1px;
+  transform: translateY(-100%);
 }

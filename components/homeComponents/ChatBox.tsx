@@ -15,6 +15,9 @@ import {
   Loader2,
   CircleX,
   CircleUserRound,
+  WheatOff,
+  Info,
+  Wheat,
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { useRecipeStore } from "@/store/recipeStore";
@@ -22,24 +25,26 @@ import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/useAuth";
 
 export default function ChatBox() {
-  const { 
-    setRecipeData, 
-    setDialogOpen, 
-    setIsLoadingRecipeGeneration, 
+  const {
+    setRecipeData,
+    setDialogOpen,
+    setIsLoadingRecipeGeneration,
     isLoadingRecipeGeneration,
     getRemainingRecipes,
     setRemainingRecipes,
     setIsToastNotificationOpen,
-    setToastNotification 
+    setToastNotification,
   } = useRecipeStore();
-  
+
   const [ingredients, setIngredients] = useState("");
   const [coldRecipe, setColdRecipe] = useState(false);
   const [hotRecipe, setHotRecipe] = useState(false);
   const [sweetRecipe, setSweetRecipe] = useState(false);
   const [saltyRecipe, setSaltyRecipe] = useState(false);
+  const [strictRecipe, setStrictRecipe] = useState(false);
   const [image, setImage] = useState(false);
   const [numberOfVersions, setNumberOfVersions] = useState(1);
+  const [isOpenInfoText, setIsOpenInfoText] = useState(false);
   const [userData, setUserData] = useState<any>(null);
   const { user } = useAuth();
 
@@ -48,6 +53,7 @@ export default function ChatBox() {
     hot_recipe: hotRecipe,
     sweet_recipe: sweetRecipe,
     salty_recipe: saltyRecipe,
+    strict_recipe: strictRecipe,
     image: image,
     number_of_versions: numberOfVersions,
   };
@@ -57,16 +63,18 @@ export default function ChatBox() {
       const currentRemainingRecipes = !user ? getRemainingRecipes() : null;
 
       setIsLoadingRecipeGeneration(true);
-      
+
       // Récupérer le token d'authentification via la session
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       const token = session?.access_token;
-      
+
       const recipe = await fetch("/api/recipe-generation", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          ...(token && { "Authorization": `Bearer ${token}` })
+          ...(token && { Authorization: `Bearer ${token}` }),
         },
         body: JSON.stringify({
           ingredients,
@@ -74,14 +82,17 @@ export default function ChatBox() {
           remainingRecipes: currentRemainingRecipes,
         }),
       });
-      
+
       const data = await recipe.json();
-      
+
       // Si la réponse contient un nouveau nombre de recettes restantes, le mettre à jour
-      if (data.remainingRecipes !== null && data.remainingRecipes !== undefined) {
+      if (
+        data.remainingRecipes !== null &&
+        data.remainingRecipes !== undefined
+      ) {
         setRemainingRecipes(data.remainingRecipes);
       }
-      
+
       // Gérer les erreurs de limite
       if (recipe.status === 429) {
         setIsToastNotificationOpen(true);
@@ -93,7 +104,7 @@ export default function ChatBox() {
         setIsLoadingRecipeGeneration(false);
         return;
       }
-      
+
       setRecipeData(data);
       setDialogOpen(true);
       setIsLoadingRecipeGeneration(false);
@@ -118,18 +129,50 @@ export default function ChatBox() {
     }
     getUserSubscription();
   }, [user?.id]);
-  
 
   return (
     <div className="mt-8">
-      <div className=" bg-[var(--color-brown-1)] p-3 rounded-2xl overflow-hidden">
+      <div className=" bg-[var(--color-brown-1)] p-3 rounded-2xl overflow-hidden relative">
         <Textarea
           className="bg-[var(--color-brown-2)] border-none outline-none text-white placeholder:text-[#EBEBEB] h-14 max-h-14 rounded-lg mb-8"
           placeholder="Entrez les ingrédients ici... (3 ingrédients min. recommandés)"
           value={ingredients}
           onChange={(e) => setIngredients(e.target.value)}
         />
+        {isOpenInfoText && (
+          <div className="absolute bg-bg w-[90%] left-1/2 -translate-x-1/2 h-fit z-20 top-1/2 p-4 rounded-xl font-medium text-sm popupinfo">
+            Active ce filtre si tu veux des recettes{" "}
+            <span className="text-[#F09F2D]">uniquement</span> avec les{" "}
+            <span className="text-[#F09F2D]">ingrédients</span> que{" "}
+            <span className="text-[#F09F2D]">tu as choisis</span>,{" "}
+            <span className="text-[#F09F2D]">aucun autre rajouté</span> par
+            notre IA !
+          </div>
+        )}
         <div className="bg-[var(--color-brown-2)] p-3 rounded-lg flex flex-col gap-3 overflow-hidden">
+          <div className="relative">
+            <Info
+              onMouseEnter={() => setIsOpenInfoText(true)}
+              onMouseLeave={() => setIsOpenInfoText(false)}
+              className={`min-w-5 min-h-5 absolute right-2 top-2 z-50 cursor-pointer ${
+                strictRecipe && "text-[#F09F2D]"
+              }`}
+            />
+            <ChatBoxButton
+              text="Recette stricte"
+              icon={
+                strictRecipe ? (
+                  <WheatOff className="min-w-5 min-h-5" />
+                ) : (
+                  <Wheat className="min-w-5 min-h-5" />
+                )
+              }
+              color="#F09F2D"
+              onClick={() => setStrictRecipe(!strictRecipe)}
+              isSelected={strictRecipe}
+              className="w-full"
+            />
+          </div>
           <div className="flex justify-between gap-3">
             <ChatBoxButton
               text="Recette froide"
@@ -162,6 +205,7 @@ export default function ChatBox() {
               isSelected={saltyRecipe}
             />
           </div>
+
           <div className="flex justify-between gap-3">
             <ChatBoxButton
               icon={
@@ -209,7 +253,11 @@ export default function ChatBox() {
         <Button
           onClick={handleGenerated}
           className="bg-[var(--color-brown-2)] rounded-xl mt-4 ml-auto"
-          disabled={isLoadingRecipeGeneration || (!user && getRemainingRecipes() <= 0) || ingredients.length < 3}
+          disabled={
+            isLoadingRecipeGeneration ||
+            (!user && getRemainingRecipes() <= 0) ||
+            ingredients.length < 3
+          }
         >
           {isLoadingRecipeGeneration ? (
             <Loader2 className="animate-spin" />
