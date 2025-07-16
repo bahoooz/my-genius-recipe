@@ -15,12 +15,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { CircleCheckBig, CircleX } from "lucide-react";
+import { useRecipeStore } from "@/store/recipeStore";
 
 export function UpdatePassword() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const { setIsToastNotificationOpen, setToastNotification } = useRecipeStore();
 
   const handleReset = async () => {
     setIsLoading(true);
@@ -28,9 +30,19 @@ export function UpdatePassword() {
 
     if (error) {
       console.error(error);
-      alert("Erreur lors du changement de mot de passe.");
+      setIsToastNotificationOpen(true);
+      setToastNotification({
+        text: "Erreur lors du changement du mot de passe",
+        icon: <CircleX size={24} />,
+        bgColor: "#B34646",
+      });
     } else {
-      setSuccess(true);
+      setIsToastNotificationOpen(true);
+      setToastNotification({
+        text: "Ton mot de passe a été mis a jour avec succès !",
+        icon: <CircleCheckBig size={24} />,
+        bgColor: "#05df72",
+      });
     }
     setIsLoading(false);
   };
@@ -43,38 +55,52 @@ export function UpdatePassword() {
             Changer mot de passe
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] bg-modal-bg gap-5">
           <DialogHeader>
-            <DialogTitle>Edit password</DialogTitle>
-            <DialogDescription>Update your password here</DialogDescription>
+            <DialogTitle className="text-red font-medium text-2xl font-fredoka text-center">
+              Modifie ton mot de passe
+            </DialogTitle>
           </DialogHeader>
-          <div className="grid gap-4">
-            <div className="grid gap-3">
-              <Label htmlFor="name-1">New Password</Label>
+          <div className="flex flex-col justify-center gap-4">
+            <div className="flex flex-col gap-2">
+              <Label className="text-red font-medium text-base">
+                Nouveau mot de passe
+              </Label>
               <Input
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                id="name-1"
-                name="name"
+                className="border-2 border-red placeholder:text-red text-red"
+                placeholder="Écris ton mot de passe ici..."
+                required
+                type="email"
               />
             </div>
             <div className="grid gap-3">
-              <Label htmlFor="username-1">Confirm Password</Label>
+              <Label
+                htmlFor="username-1"
+                className="text-red font-medium text-base"
+              >
+                Confirmer mot de passe
+              </Label>
               <Input
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 id="username-1"
                 name="username"
+                placeholder="Confirme ton mot de passe ici..."
+                className="border-2 border-red placeholder:text-red text-red"
               />
             </div>
-            {success && ("ça a marché !")}
           </div>
           <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Exit</Button>
-            </DialogClose>
-            <Button onClick={handleReset} disabled={isLoading}>
-              Change password
+            <Button
+              onClick={handleReset}
+              disabled={isLoading}
+              size={"lg"}
+              className="bg-red flex gap-2"
+            >
+              <CircleCheckBig className="min-w-6 min-h-6" /> Confirmer les
+              changements
             </Button>
           </DialogFooter>
         </DialogContent>

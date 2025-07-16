@@ -4,7 +4,7 @@ import React from "react";
 import RecipeImageFullScreen from "../homeComponents/RecipeImageFullScreen";
 import LoadingRecipeScreen from "../homeComponents/LoadingRecipeScreen";
 import { useRecipeStore } from "@/store/recipeStore";
-import FavoriteRecipeAlert from "./Alert";
+import FavoriteRecipeAlert from "./Toast";
 import RecipesRemaining from "./RecipesRemaining";
 
 export default function ClientLayout({

@@ -33,7 +33,7 @@ export default function ProfilePageContent() {
         .from("user_profiles")
         .select("subscription")
         .eq("user_id", user.id)
-        .single(); // ✅ tolère 0 résultat
+        .single();
 
       if (!existingProfile) {
         async function createUserProfile() {
@@ -71,8 +71,8 @@ export default function ProfilePageContent() {
         <Title title="Profil" className="lg:ml-12 lg:text-center" />
         <div className="max-w-[400px] mx-auto flex justify-center items-center gap-12 lg:gap-12 xl:gap-16 md:absolute md:left-1/2 md:-translate-x-1/2 md:top-1/2 md:-translate-y-1/2 md:min-w-[600px] lg:min-w-[800px] xl:min-w-[900px] lg:ml-12 lg:mt-4">
           <div className="max-w-full min-w-[300px] md:max-w-[400px] 2xl:max-w-[500px] md:border-none md:p-8 md:py-4 md:border-brown-2 md:overflow-y-scroll md:h-[70dvh] custom-scrollbar">
-            <div className=" bg-brown-2 lg:min-w-[280px] text-white flex justify-center items-center h-[180px] rounded-2xl mb-4">
-              <div className="text-lg flex flex-col gap-3">
+            <div className=" bg-brown-2 md:max-w-[297.56px] overflow-hidden lg:min-w-[280px] lg:max-w-full text-white flex justify-center items-center h-[180px] rounded-2xl mb-4 p-4">
+              <div className="text-lg flex flex-col gap-3 w-full break-words">
                 <h3 className="flex gap-2 lg:gap-3">
                   <CircleUserRound
                     strokeWidth={1.5}
@@ -80,13 +80,16 @@ export default function ProfilePageContent() {
                   />{" "}
                   {username}
                 </h3>
-                <h3 className="flex gap-2 lg:gap-3 items-center">
-                  <Mail strokeWidth={1.5} className="min-w-7 min-h-7" />
-                  {email}
+                <h3 className="flex items-center gap-2 lg:gap-3 break-words flex-wrap">
+                  <Mail
+                    strokeWidth={1.5}
+                    className="min-w-7 min-h-7 flex-shrink-0"
+                  />
+                  <span className="break-words flex-1 min-w-0">{email}</span>
                 </h3>
                 <h3 className="flex gap-2 lg:gap-3">
                   <BadgeEuro strokeWidth={1.5} className="min-w-7 min-h-7" />{" "}
-                  Plan {account_type}
+                  Compte {account_type}
                 </h3>
               </div>
             </div>
