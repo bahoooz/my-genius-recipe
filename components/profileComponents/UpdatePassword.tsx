@@ -23,6 +23,7 @@ export function UpdatePassword() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { setIsToastNotificationOpen, setToastNotification } = useRecipeStore();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleReset = async () => {
     setIsLoading(true);
@@ -43,12 +44,13 @@ export function UpdatePassword() {
         icon: <CircleCheckBig size={24} />,
         bgColor: "#05df72",
       });
+      setIsDialogOpen(false)
     }
     setIsLoading(false);
   };
 
   return (
-    <Dialog>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <form>
         <DialogTrigger asChild>
           <Button size={"lg"} className="bg-[#252525] w-full">
