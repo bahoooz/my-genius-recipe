@@ -92,12 +92,12 @@ export function UpdatePassword() {
               />
             </div>
           </div>
-          <DialogFooter>
+          <DialogFooter className="sm:justify-center">
             <Button
               onClick={handleReset}
               disabled={isLoading}
               size={"lg"}
-              className="bg-red flex gap-2"
+              className="bg-red flex gap-2 w-full"
             >
               <CircleCheckBig className="min-w-6 min-h-6" /> Confirmer les
               changements
