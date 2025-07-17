@@ -29,21 +29,14 @@ export default function FavoriteRecipes() {
   useEffect(() => {
     async function fetchFavorites() {
       try {
-        console.log("🔍 Début de la récupération des favoris...");
-
         const {
           data: { user },
           error: userError,
         } = await supabase.auth.getUser();
-        console.log(
-          "👤 Utilisateur:",
-          user ? user.id : "Non connecté",
-          userError
-        );
 
         if (!user) {
-          console.log("❌ Utilisateur non authentifié");
           setLoading(false);
+          console.log(userError);
           return;
         }
 
@@ -54,15 +47,12 @@ export default function FavoriteRecipes() {
           .eq("user_id", user.id)
           .order("created_at", { ascending: false });
 
-        console.log("📊 Résultats de la requête:", { data, error });
-
         if (error) {
           console.error(
             "❌ Erreur lors de la récupération des favoris:",
             error
           );
         } else {
-          console.log("✅ Favoris récupérés:", data);
           setFavorites(data);
         }
       } catch (error) {
@@ -74,11 +64,6 @@ export default function FavoriteRecipes() {
 
     fetchFavorites();
   }, []);
-
-  // Debugging séparé pour surveiller les changements de favorites
-  useEffect(() => {
-    console.log("🎯 État actuel des favorites:", favorites);
-  }, [favorites]);
 
   const toggleDetails = (recipeId: string) => {
     setOpenDetailsId((prev) => (prev === recipeId ? null : recipeId));

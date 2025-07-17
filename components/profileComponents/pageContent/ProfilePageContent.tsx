@@ -10,6 +10,7 @@ import BeforeDesktopVersion from "@/components/global/BeforeDesktopVersion";
 import FavoriteRecipes from "@/components/profileComponents/FavoriteRecipes";
 import { supabase, signOut } from "@/lib/supabase";
 import { UpdatePassword } from "../UpdatePassword";
+import Link from "next/link";
 
 export default function ProfilePageContent() {
   const { user } = useAuth();
@@ -65,6 +66,7 @@ export default function ProfilePageContent() {
     getUserSubscription();
   }, [user?.id]);
 
+  console.log(account_type);
   return (
     <ProtectedRoute>
       <div className="px-4 pt-12 mb-32">
@@ -106,12 +108,22 @@ export default function ProfilePageContent() {
                 Se déconnecter
               </Button>
               <UpdatePassword />
-              <Button size={"lg"} className="bg-green-400">
-                Changer abonnement
-              </Button>
-              <span className="underline text-gray-500 text-center text-xs">
-                Résilier abonnement
-              </span>
+              {subscription !== "free" ? (
+                <>
+                  <Button size={"lg"} className="bg-green-400">
+                    Changer abonnement
+                  </Button>
+                  <span className="underline text-gray-500 text-center text-xs">
+                    Résilier abonnement
+                  </span>
+                </>
+              ) : (
+                <>
+                  <Link href={"/pricing"} className="inline-flex hover:scale-[102%] items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all outline-none aria-invalid:border-destructive cursor-pointer bg-green-400 h-10 rounded-2xl px-6 has-[>svg]:px-4 text-white">
+                    Passer au plan supérieur
+                  </Link>
+                </>
+              )}
             </div>
           </div>
           <BeforeDesktopVersion />
