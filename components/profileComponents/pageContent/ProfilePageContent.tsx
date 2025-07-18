@@ -3,7 +3,7 @@
 import ProtectedRoute from "@/components/global/ProtectedRoute";
 import Title from "@/components/global/Title";
 import { Button } from "@/components/ui/button";
-import { BadgeEuro, CircleUserRound, Mail } from "lucide-react";
+import { BadgeEuro, CircleUserRound, CircleX, Mail } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@/lib/useAuth";
 import BeforeDesktopVersion from "@/components/global/BeforeDesktopVersion";
@@ -11,10 +11,12 @@ import FavoriteRecipes from "@/components/profileComponents/FavoriteRecipes";
 import { supabase, signOut } from "@/lib/supabase";
 import { UpdatePassword } from "../UpdatePassword";
 import Link from "next/link";
+import { useRecipeStore } from "@/store/recipeStore";
 
 export default function ProfilePageContent() {
   const { user } = useAuth();
   const [subscription, setSubscription] = useState<string | null>(null);
+  const { setIsToastNotificationOpen, setToastNotification } = useRecipeStore();
   const username = user?.user_metadata?.username || "Utilisateur";
   const email = user?.email || "Aucun email";
   const account_type =
@@ -66,7 +68,27 @@ export default function ProfilePageContent() {
     getUserSubscription();
   }, [user?.id]);
 
-  console.log(account_type);
+  const handleGeneratePortalSession = async () => {
+    const res = await fetch("/api/create-portal-session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user_id: user?.id }),
+    });
+
+    const data = await res.json();
+
+    if (data?.url) {
+      window.location.href = data.url;
+    } else {
+      setIsToastNotificationOpen(true);
+      setToastNotification({
+        text: "Erreur lors du changement du mot de passe",
+        icon: <CircleX size={24} />,
+        bgColor: "#B34646",
+      });
+    }
+  };
+
   return (
     <ProtectedRoute>
       <div className="px-4 pt-12 mb-32">
@@ -110,7 +132,11 @@ export default function ProfilePageContent() {
               <UpdatePassword />
               {subscription !== "free" ? (
                 <>
-                  <Button size={"lg"} className="bg-green-400">
+                  <Button
+                    size={"lg"}
+                    className="bg-green-400"
+                    onClick={handleGeneratePortalSession}
+                  >
                     Changer abonnement
                   </Button>
                   <span className="underline text-gray-500 text-center text-xs">
@@ -119,7 +145,10 @@ export default function ProfilePageContent() {
                 </>
               ) : (
                 <>
-                  <Link href={"/pricing"} className="inline-flex hover:scale-[102%] items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all outline-none aria-invalid:border-destructive cursor-pointer bg-green-400 h-10 rounded-2xl px-6 has-[>svg]:px-4 text-white">
+                  <Link
+                    href={"/pricing"}
+                    className="inline-flex hover:scale-[102%] items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all outline-none aria-invalid:border-destructive cursor-pointer bg-green-400 h-10 rounded-2xl px-6 has-[>svg]:px-4 text-white"
+                  >
                     Passer au plan supérieur
                   </Link>
                 </>
