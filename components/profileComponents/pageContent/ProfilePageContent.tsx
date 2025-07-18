@@ -82,7 +82,7 @@ export default function ProfilePageContent() {
     } else {
       setIsToastNotificationOpen(true);
       setToastNotification({
-        text: "Erreur lors du changement du mot de passe",
+        text: "Erreur lors de la gestion d'abonnement",
         icon: <CircleX size={24} />,
         bgColor: "#B34646",
       });
@@ -130,19 +130,14 @@ export default function ProfilePageContent() {
                 Se déconnecter
               </Button>
               <UpdatePassword />
-              {subscription !== "free" ? (
-                <>
-                  <Button
-                    size={"lg"}
-                    className="bg-green-400"
-                    onClick={handleGeneratePortalSession}
-                  >
-                    Changer abonnement
-                  </Button>
-                  <span className="underline text-gray-500 text-center text-xs">
-                    Résilier abonnement
-                  </span>
-                </>
+              {subscription !== "free" || "Unknown" || "unknown" ? (
+                <Button
+                  size={"lg"}
+                  className="bg-green-400"
+                  onClick={handleGeneratePortalSession}
+                >
+                  Gérer l'abonnement
+                </Button>
               ) : (
                 <>
                   <Link
