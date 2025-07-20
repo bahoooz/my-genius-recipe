@@ -27,7 +27,7 @@ export default function RecipesRemaining() {
           <p className="text-xs">
             {remainingRecipes > 0
               ? `🍽️ Génère jusqu'à ${remainingRecipes} recettes dès maintenant !`
-              : "⚠️ Plus de recettes gratuites !"}
+              : "⚠️ Plus de recettes, créer ton compte !"}
           </p>
         </div>
       ) : ("")}
