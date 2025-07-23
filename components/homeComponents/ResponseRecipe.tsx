@@ -93,6 +93,8 @@ export default function ResponseRecipe() {
         const uploadResult = await uploadResponse.json();
         setImageUrl(uploadResult.imageUrl);
 
+        console.log(imageUrl)
+
         recipeToSend = {
           content: recipeData,
           title: title || "Recette sans titre",
