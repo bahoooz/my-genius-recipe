@@ -63,7 +63,9 @@ export default function ResponseRecipe() {
 
       let recipeToSend;
 
-      if (recipeData?.imageUrl && imageUrl) {
+      console.log("url de l'image :", recipeData?.imageUrl);
+
+      if (recipeData?.imageUrl) {
         // Upload de l'image via l'API route
         const uploadResponse = await fetch("/api/upload-recipe-image", {
           method: "POST",
