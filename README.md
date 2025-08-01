@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🧠 My Genius Recipe
 
-## Getting Started
+Bienvenue sur **My Genius Recipe**, un SaaS alimenté par l'IA, qui génère des recettes de cuisine personnalisées à partir de vos ingrédients, préférences ou idées farfelues ! 🍝✨
 
-First, run the development server:
+## 🌐 Lien vers l'app
+
+🔗 [https://mygeniusrecipe.vercel.app](https://mygeniusrecipe.vercel.app)
+
+## 🚀 Fonctionnalités
+
+- 🧠 Génération de recettes via GPT-4 Turbo
+- 📸 Image réaliste de la recette générée
+- 🍽️ Jusqu'à **3 recettes** par requête en version premium
+- 💾 Favoris illimités (premium)
+- 🔒 Authentification avec Supabase (Email + OAuth)
+- 🌍 Interface intuitive et responsive
+- 📊 Analytics SEO-friendly (Lighthouse optimisé)
+
+## 🛠️ Stack utilisée
+
+- **Frontend** : [Next.js 15 (App Router)](https://nextjs.org/), Tailwind CSS 
+- **Backend** : Server Actions, Open AI, Stripe, Supabase Auth + DB + Storage
+- **IA** : GPT-4 Turbo (OpenAI API)  
+- **Base de données** : Supabase PostgreSQL  
+- **Paiement** : Stripe (abonnement premium & infinite)  
+- **Déploiement** : Vercel
+
+## 📸 Aperçu
+<img width="800" height="auto" alt="Mockup MGR" src="https://github.com/user-attachments/assets/8fa0290a-b2bd-4580-9043-8128bcff4b37" />
+<img width="800" height="auto" alt="Mockup MGR 2" src="https://github.com/user-attachments/assets/09f0a6f7-0086-421c-9c26-e173946f8ce7" />
+<img width="800" height="auto" alt="Mockup MGR 3" src="https://github.com/user-attachments/assets/0c094d9e-717c-4648-98e6-9c84833dadb0" />
+
+### Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/bahoooz/my-genius-recipe.git
+cd my-genius-recipe
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Variables d’environnement `.env`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+STRIPE_WEBHOOK_SECRET=your_key
+STRIPE_SECRET_KEY=your_url
+NEXT_PUBLIC_SUPABASE_URL=your_anon_key
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_stripe_key
+SUPABASE_SERVICE_ROLE_KEY=your_stripe_publishable_key
+OPEN_API_KEY=your_webhook_secret
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Lancer en local
 
-## Learn More
+```bash
+pnpm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+## 💡 À propos
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Ce projet est développé par [**Bahoz**](https://bahoz-dev.com), développeur full-stack passionné.  
+N'hésitez pas à me suivre ou à me contacter pour toute suggestion, bug ou collaboration !
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## ⭐ Support
 
-## Deploy on Vercel
+Si vous aimez le projet, n'hésitez pas à :
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Liker ⭐ le repo
+- Me suivre sur GitHub
+- Partager l'app à vos amis food lovers 😋
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+🧠 *"Cuisinez avec votre imagination, My Genius Recipe s'occupe du reste."*
